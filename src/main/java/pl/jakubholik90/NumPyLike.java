@@ -1,5 +1,7 @@
 package pl.jakubholik90;
 
+import java.util.Random;
+
 public abstract class NumPyLike {
     // set of methods analog to those from python numpy
 
@@ -15,6 +17,17 @@ public abstract class NumPyLike {
         Double[][] returnArray = new Double[size][1];
         for (int i = 0; i < size; i++) {
             returnArray[i][0] = 1.0;
+        }
+        return returnArray;
+    }
+
+    public static Double[][] random(int numberOfRows, int numberOfColumns) {
+        Double[][] returnArray = new Double[numberOfRows][numberOfColumns];
+        Random random = new Random();
+        for (int i = 0; i < numberOfRows; i++) {
+            for (int j = 0; j < numberOfColumns; j++) {
+                returnArray[i][j] = random.nextDouble(1);
+            }
         }
         return returnArray;
     }
