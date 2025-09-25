@@ -1,9 +1,9 @@
 package pl.jakubholik90;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
 
 public class NeuralNetwork {
 
@@ -12,9 +12,9 @@ public class NeuralNetwork {
     private final double eta;
     private final ActivationFunctionInterface outputLayerActivationFunction;
     private final ActivationFunctionInterface hiddenLayerActivationFunction;
-    private List<Double[][]> activationsMatrix;
-    private List<Double[][]> weightedSumsMatrix;
-    private List<Double[][]> weights;
+    public List<Double[]> activationsMatrix;
+    public List<Double[]> weightedSumsMatrix;
+    public List<Double[][]> weightsMatrix;
 
     public NeuralNetwork(int[] structure) {
         // simple constructor, passing only structure
@@ -34,8 +34,8 @@ public class NeuralNetwork {
         this.hiddenLayerActivationFunction = hiddenLayerActivationFunction;
     }
 
-    // main method to build all necessary subcomponents
-    public void build() {
+    // STEP 0: main method to build all necessary subcomponents
+    public void step0Build() {
         this.createLayers();
         this.createWeights();
     }
@@ -44,8 +44,8 @@ public class NeuralNetwork {
     private void createLayers() {
         // for loop for each structure layer
         boolean isOutputLayer;
-        List<Double[][]> activationsMatrixLList = new LinkedList<>();
-        List<Double[][]> weightedSumsMatrixLList = new LinkedList<>();
+        List<Double[]> activationsMatrixLList = new LinkedList<>();
+        List<Double[]> weightedSumsMatrixLList = new LinkedList<>();
         for (int i = 0; i < this.structure.length; i++) {
             isOutputLayer = (i == (this.structure.length-1)); //boolean for checking if this is the last layer
             int numberOfActivations; //number of activations in each layer (for hidden layers +1 because of bias activation)
@@ -55,8 +55,8 @@ public class NeuralNetwork {
                 numberOfActivations = this.structure[i] + 1;
             }
             int numberOfWeightedSums = this.structure[i]; //number of weighted sums in each layer
-            Double[][] weightedSumsInLayer = NumPyLike.zeros(numberOfWeightedSums); //vector for weighted sums (initial values)
-            Double[][] activationsInLayer = NumPyLike.ones(numberOfActivations); //vector for activations (initial values)
+            Double[] weightedSumsInLayer = NumPyLike.zeros(numberOfWeightedSums); //vector for weighted sums (initial values)
+            Double[] activationsInLayer = NumPyLike.ones(numberOfActivations); //vector for activations (initial values)
             weightedSumsMatrixLList.add(weightedSumsInLayer);
             activationsMatrixLList.add(activationsInLayer);
         }
@@ -72,17 +72,34 @@ public class NeuralNetwork {
             if (i==0) {
                 weightsMatrixLList.add(new Double[0][0]); // in layer 0 there ist empty weights matrix, we want nummeration to start with 1
             } else {
-
-                Double[][] layerWeights = NumPyLike.random(this.weightedSumsMatrix.get(i).)
-
-                        // tutaj skonczyc, wyciagnac jakos te rozmiary tabeli
-
+                Double[][] layerWeights = NumPyLike.randomMinus1to1(this.weightedSumsMatrix.get(i).length,this.activationsMatrix.get(i-1).length);
+                weightsMatrixLList.add(layerWeights);
             }
         }
+        this.weightsMatrix = new ArrayList<>(weightsMatrixLList);
+
+    }
+    // STEP1: feedforward
+    public void step1FeedForward(Double[] inputLayer) {
+        //checking if input has correct size
+        if (inputLayer.length != (this.activationsMatrix.get(0).length)-1) {
+            throw new WrongInputSizeException("Input size does not match structure size. Check your input data.");
+        }
+
+        // applying input to first layer of activation matrix (inedx 0 is bias = 1)
+        for (int i = 1; i < this.activationsMatrix.get(0).length; i++) {
+            this.activationsMatrix.get(0)[i]=inputLayer[i-1];
+        }
+
+        // loop after each hidden layer and output layer
+        for (int i = 1; i < this.activationsMatrix.size(); i++) {
+
+        }
+
 
     }
 
-    //check if needed
+    // random test methods
     public double runOutputActivationFunction(double z, boolean calculateDerivative) {
         return this.outputLayerActivationFunction.activationFunction(z,calculateDerivative);
     }
