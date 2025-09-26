@@ -114,6 +114,32 @@ public class NeuralNetwork {
         return returnArray;
     }
 
+    // step 2 BACK PROPAGATION
+
+    public void step2BackPropagation(List<TrainingDataRecord> trainingDataRecordList) {
+        // list of partial derivatives in each layer
+        ArrayList<Double[]> partialDeltasList = new ArrayList<>(this.structure.length);
+
+        // for loop after each layer
+        for (int i = 0; i < this.activationsMatrix.size(); i++) {
+            partialDeltasList.set(i,NumPyLike.zeros(this.weightedSumsMatrix.get(i).length));
+        }
+
+        // list of derivatives from weights in each layer
+        ArrayList<Double[][]> deltaWlist = new ArrayList<>(this.structure.length);
+
+        for (int i = 0; i < this.structure.length; i++) {
+            if (i == 0) {
+                deltaWlist.set(i,new Double[0][0]); // empty Array in input layer (placeholder, weights are numbered starting with i=1=
+            } else {
+                deltaWlist.set(i,NumPyLike.zeros2D(
+                        this.weightsMatrix.size(), // number of rows (number of neurons in previos layer + 1 (bias))
+                        this.weightedSumsMatrix.get(i).length // number of columns (number of neurons in current layer + 1 (bias))
+                ));
+            }
+        }
+    }
+
     // run activation methods
     public double runOutputActivationFunction(double z, boolean calculateDerivative) {
         return this.outputLayerActivationFunction.activationFunction(z,calculateDerivative);

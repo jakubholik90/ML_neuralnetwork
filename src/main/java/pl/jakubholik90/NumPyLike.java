@@ -15,6 +15,16 @@ public abstract class NumPyLike {
         return returnArray;
     }
 
+    public static Double[][] zeros2D(int numberOfRows, int numberOfColumns) {
+        Double[][] returnArray = new Double[numberOfRows][numberOfColumns];
+        for (int i = 0; i < numberOfRows; i++) {
+            for (int j = 0; j < numberOfColumns; j++) {
+                returnArray[i][j] = 0.0;
+            }
+        }
+        return returnArray;
+    }
+
     public static Double[] ones(int size) {
         Double[] returnArray = new Double[size];
         for (int i = 0; i < size; i++) {
