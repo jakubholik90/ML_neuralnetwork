@@ -80,28 +80,47 @@ public class NeuralNetwork {
 
     }
     // STEP1: feedforward
-    public void step1FeedForward(Double[] inputLayer) {
+    public Double[] step1FeedForward(Double[] inputLayer) {
         //checking if input has correct size
         if (inputLayer.length != (this.activationsMatrix.get(0).length)-1) {
             throw new WrongInputSizeException("Input size does not match structure size. Check your input data.");
         }
 
-        // applying input to first layer of activation matrix (inedx 0 is bias = 1)
+        // applying input to first layer of activation matrix (index i=0 is for bias with value 1, therefore for loop starting with i=1)
         for (int i = 1; i < this.activationsMatrix.get(0).length; i++) {
-            this.activationsMatrix.get(0)[i]=inputLayer[i-1];
+            this.activationsMatrix.get(0)[i]=inputLayer[i-1]; // inserting input i-1 into first layer(index 0) of activations, index i
         }
 
         // loop after each hidden layer and output layer
         for (int i = 1; i < this.activationsMatrix.size(); i++) {
+            Double[] weightedSumsLayerToReplace= NumPyLike.matrixVectorMultiply(this.weightsMatrix.get(i), this.activationsMatrix.get(i - 1));// vector of acvivation layer (for example i=0) times weights matrix (for example i=1)
+        this.weightedSumsMatrix.set(i,weightedSumsLayerToReplace); // inserting weighted sums layer into weighted matrix
 
+            // running activation function in hidden layers and output layer
+            if (i == (this.activationsMatrix.size()-1)) {
+                // is in output layer
+                for (int j = 0; j < this.weightedSumsMatrix.get(i).length; j++) {
+                    this.activationsMatrix.get(i)[j] = this.runOutputActivationFunction(weightedSumsMatrix.get(i)[j], false);
+                }
+            } else {
+                // is in hiddenlayer layer
+                for (int j = 1; j < this.weightedSumsMatrix.get(i).length; j++) { // sarting foorm i=1 due to bias
+                    this.activationsMatrix.get(i)[j] = this.runHiddenActivationFunction(weightedSumsMatrix.get(i)[j], false);
+                }
+            }
         }
 
-
+        Double[] returnArray = this.activationsMatrix.getLast();
+        return returnArray;
     }
 
-    // random test methods
+    // run activation methods
     public double runOutputActivationFunction(double z, boolean calculateDerivative) {
         return this.outputLayerActivationFunction.activationFunction(z,calculateDerivative);
+    }
+
+    public double runHiddenActivationFunction(double z, boolean calculateDerivative) {
+        return this.hiddenLayerActivationFunction.activationFunction(z,calculateDerivative);
     }
 
 }
