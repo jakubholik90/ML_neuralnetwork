@@ -127,7 +127,6 @@ public class NeuralNetwork {
 
         // list of derivatives from weights in each layer
         ArrayList<Double[][]> deltaWlist = new ArrayList<>(this.structure.length);
-
         for (int i = 0; i < this.structure.length; i++) {
             if (i == 0) {
                 deltaWlist.set(i,new Double[0][0]); // empty Array in input layer (placeholder, weights are numbered starting with i=1=
@@ -138,6 +137,57 @@ public class NeuralNetwork {
                 ));
             }
         }
+
+        //for loop after max. iterations number
+        for (int i = 0; i < this.numberOfIterations; i++) {
+            Double[] calculatedPrediction = new Double[trainingDataRecordList.size()];
+            Double[] difference = new Double[trainingDataRecordList.size()]; // difference between calculated preduction and given output in training data
+            Double[] outputLayerDerivative = new Double[trainingDataRecordList.size()];
+            double error = 0.0;
+
+            //for loop after each training data record
+            for (int j = 0; j < trainingDataRecordList.size(); j++) {
+                TrainingDataRecord dataRecord = trainingDataRecordList.get(i);
+                // checking fi data record has proper number of expected outputs
+                if (dataRecord.trainingOutput().length != this.activationsMatrix.getLast().length) {
+                    throw new WrongInputSizeException("Output size of given training data does not match size of neural network structure (output layer)");
+
+                }
+                // loop after each element in output layer
+                for (int k = 0; k < dataRecord.trainingOutput().length; k++) {
+                    calculatedPrediction[k] = this.step1FeedForward(dataRecord.trainingInput())[k];
+                    difference[k] = calculatedPrediction[k] - dataRecord.trainingOutput()[k];
+                    outputLayerDerivative[k] = 2 * difference[k];
+                    error = error + Math.pow(difference[k],2);
+                }
+
+                //for loop after each layer (backwards, starting from output layer
+                for (int layer = this.activationsMatrix.size()-1; layer <= 0; layer--) {
+                    // checking if actual layer is output layer
+                    if (layer == (this.activationsMatrix.size()-1)) {
+                        //for loop after each output element
+                        for (int layerElement = 0; layerElement < this.activationsMatrix.getLast().length; layerElement++) {
+                            // partial delta in output layer = output layer derivative * output activation function ( weighted sum)
+                            partialDeltasList.get(layer)[layerElement] = outputLayerDerivative[layerElement] * this.runOutputActivationFunction(this.weightedSumsMatrix.get(layer)[layerElement],true);
+                        }
+                    } else {
+                        //for loop after each output element
+                        for (int layerElement = 0; layerElement < this.activationsMatrix.getLast().length; layerElement++) {
+                            // partial delta in hidden layer = weights matrix (transposed) * partial deltas * hidden layer activation function ( weighted sum)
+
+                            // to be done here
+
+
+                        }
+                    }
+                }
+
+
+
+
+            }
+        }
+
     }
 
     // run activation methods

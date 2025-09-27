@@ -38,7 +38,7 @@ public abstract class NumPyLike {
         Random random = new Random();
         for (int i = 0; i < numberOfRows; i++) {
             for (int j = 0; j < numberOfColumns; j++) {
-                returnArray[i][j] = random.nextDouble(1)*2-1;
+                returnArray[i][j] = random.nextDouble(1) * 2 - 1;
             }
         }
         return returnArray;
@@ -63,11 +63,23 @@ public abstract class NumPyLike {
         for (int i = 0; i < inputMatrix.length; i++) {
             double returnValue = 0;
             for (int j = 0; j < inputVector.length; j++) {
-                returnValue = returnValue + inputVector[j]*inputMatrix[i][j];
+                returnValue = returnValue + inputVector[j] * inputMatrix[i][j];
                 // System.out.println("step" + i + "/" + j + ": adding " + inputVector[j] + "*" + inputMatrix[i][j]);
             }
-        returnArray[i]=returnValue;
+            returnArray[i] = returnValue;
         }
         return returnArray;
     }
+
+    // skonczyc tu transponowanie macierzy
+    public static Double[][] transpose(Double[][] inputMatrix) {
+        Double[][] returnArray = new Double[inputMatrix[0].length][inputMatrix.length];
+        for (int rows = 0; rows < inputMatrix.length; rows++) {
+            for (int columns = 0; columns < inputMatrix[rows].length; columns++) {
+                returnArray[columns][rows] = inputMatrix[rows][columns];
+            }
+        }
+    return returnArray;
+    }
+
 }

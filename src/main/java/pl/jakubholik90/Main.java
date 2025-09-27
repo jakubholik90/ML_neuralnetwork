@@ -53,6 +53,8 @@ public class Main {
         Double[] nn2Step1Result = nn2.step1FeedForward(testInput);
         System.out.println(Arrays.toString(nn2Step1Result));
 
+        // test - matrix transpose (TO BE DONE)
+
 
     }
 }

@@ -1,5 +1,5 @@
 package pl.jakubholik90;
 
-public record TrainingDataRecord(Double[] inputOutput, Double[] trainingOutput) {
+public record TrainingDataRecord(Double[] trainingInput, Double[] trainingOutput) {
 
 }
