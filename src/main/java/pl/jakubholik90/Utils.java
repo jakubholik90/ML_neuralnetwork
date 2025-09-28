@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-//set of random static methods
+//set of random static methods used for testing, displaying, etc
 public class Utils {
 
     // displaying of List<Double[]>
@@ -25,4 +25,6 @@ public class Utils {
             System.out.println("layer" + i +":" + returnLayer);
         }
     }
+
+
 }

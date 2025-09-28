@@ -1,7 +1,6 @@
 package pl.jakubholik90;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -93,7 +92,7 @@ public class NeuralNetwork {
 
         // loop after each hidden layer and output layer
         for (int i = 1; i < this.activationsMatrix.size(); i++) {
-            Double[] weightedSumsLayerToReplace= NumPyLike.matrixVectorMultiply(this.weightsMatrix.get(i), this.activationsMatrix.get(i - 1));// vector of acvivation layer (for example i=0) times weights matrix (for example i=1)
+            Double[] weightedSumsLayerToReplace= NumPyLike.matrixTimesVector(this.weightsMatrix.get(i), this.activationsMatrix.get(i - 1));// vector of acvivation layer (for example i=0) times weights matrix (for example i=1)
         this.weightedSumsMatrix.set(i,weightedSumsLayerToReplace); // inserting weighted sums layer into weighted matrix
 
             // running activation function in hidden layers and output layer
@@ -125,7 +124,7 @@ public class NeuralNetwork {
             partialDeltasList.set(i,NumPyLike.zeros(this.weightedSumsMatrix.get(i).length));
         }
 
-        // list of derivatives from weights in each layer
+        // list of derivatives (differences??) from weights in each layer
         ArrayList<Double[][]> deltaWlist = new ArrayList<>(this.structure.length);
         for (int i = 0; i < this.structure.length; i++) {
             if (i == 0) {
@@ -175,11 +174,27 @@ public class NeuralNetwork {
                         for (int layerElement = 0; layerElement < this.activationsMatrix.getLast().length; layerElement++) {
                             // partial delta in hidden layer = weights matrix (transposed) * partial deltas * hidden layer activation function ( weighted sum)
 
-                            // to be done here
 
+                            // slicing weights matrix (cutting of bias, column 0)
+                            Double[][] slicedWeightsMatrix = NumPyLike.slice2DArray(this.weightsMatrix.get(layer+1), 0, this.weightsMatrix.get(layer).length, 1, this.weightsMatrix.get(layer)[layerElement].length - 1);
+                            // transposing weights matrix and cutting of bias (index 0 in each layer)
+                            Double[][] transposedAndSlicedWeightsMatrix = NumPyLike.transposeMatrix(slicedWeightsMatrix);
+
+                            partialDeltasList.get(layer)[layerElement] = NumPyLike.matrixTimesVector(transposedAndSlicedWeightsMatrix,partialDeltasList.get(layer+1))[layerElement] * this.runHiddenActivationFunction(this.weightedSumsMatrix.get(layer)[layerElement],true);
 
                         }
                     }
+
+                    Double[] doubles = this.activationsMatrix.get(layer - 1);
+                    Double[][] activationMatrixToTranspose = new Double[this.activationsMatrix.get(layer-1).length][1];
+                    for (int k = 0; k < this.activationsMatrix.get(layer-1).length; k++) {
+                        activationMatrixToTranspose[k][0] = this.activationsMatrix.get(layer-1)[k];
+                    }
+
+                    // sum of weight deviations in each layer (sum in whole layer)
+                    deltaWlist.set(layer,NumPyLike.add2Arrays(deltaWlist.get(layer),-1 * this.eta * NumPyLike.vectorTimesTransposedVector(partialDeltasList.get(layer),NumPyLike.transposeMatrix(activationMatrixToTranspose))));
+
+
                 }
 
 

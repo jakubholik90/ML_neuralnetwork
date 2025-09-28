@@ -1,13 +1,14 @@
 package pl.jakubholik90;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
 
         //test activation functions
-        int[] structure = new int[] {4,5,2};
+        int[] structure = new int[] {3,4,2};
         NeuralNetwork nn1 = new NeuralNetwork(structure);
 //        double v1 = nn1.runOutputActivationFunction(10, false);
         NeuralNetwork nn2 = new NeuralNetwork(structure,1,1.0,ActivationFunctions::dummy,ActivationFunctions::dummy);
@@ -39,13 +40,13 @@ public class Main {
 
         // test matrix multiplication
 //        Double[] testInputVector = new Double[] {2.0,-6.0};
-//        Double[][] testInputMatrix = new Double[][] {{-0.5,4.0},{3.0,-5.0},{1.0,-2.0}};
+        Double[][] testInputMatrix = new Double[][] {{-0.5,4.0},{3.0,-5.0},{1.0,-2.0}};
 //
 //        Double[] doubles = NumPyLike.matrixVectorMultiply(testInputMatrix, testInputVector);
 //        System.out.println("\nresult of multiplication:" + Arrays.toString(doubles));
 
         // test feed forward
-        Double[] testInput = {1.1,2.1,2.2,3.0};
+        Double[] testInput = {4.0,4.0,4.0};
         Double[] nn1Step1Result = nn1.step1FeedForward(testInput);
         System.out.println(Arrays.toString(nn1Step1Result));
         System.out.println("---");
@@ -53,7 +54,29 @@ public class Main {
         Double[] nn2Step1Result = nn2.step1FeedForward(testInput);
         System.out.println(Arrays.toString(nn2Step1Result));
 
-        // test - matrix transpose (TO BE DONE)
+        // test - matrix transpose
+        List<Double[][]> testList = new ArrayList<>();
+        testList.add(testInputMatrix);
+        System.out.println("testList:");
+        Utils.displayArrayMatrix2(testList);
+        Double[][] transpose = NumPyLike.transposeMatrix(testInputMatrix);
+        List<Double[][]> testList2 = new ArrayList<>();
+        testList2.add(transpose);
+        System.out.println("testList2:");
+        Utils.displayArrayMatrix2(testList2);
+
+
+        // test backpropagation
+        ArrayList<TrainingDataRecord> trainingDataList = new ArrayList<>(3);
+        TrainingDataRecord record1 = new TrainingDataRecord(new Double[]{1.0, 1.0, 1.0},new Double[]{2.0,2.0});
+        TrainingDataRecord record2 = new TrainingDataRecord(new Double[]{2.0, 2.0, 2.0},new Double[]{4.0,4.0});
+        TrainingDataRecord record3 = new TrainingDataRecord(new Double[]{3.0, 3.0, 3.0},new Double[]{6.0,6.0});
+        trainingDataList.add(record1);
+        trainingDataList.add(record2);
+        trainingDataList.add(record3);
+
+        nn1.step2BackPropagation(trainingDataList);
+
 
 
     }
