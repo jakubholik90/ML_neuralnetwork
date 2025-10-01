@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
 
         //test activation functions
-        int[] structure = new int[] {3,4,2};
+        int[] structure = new int[] {2,4,2};
         NeuralNetwork nn1 = new NeuralNetwork(structure);
 //        double v1 = nn1.runOutputActivationFunction(10, false);
         NeuralNetwork nn2 = new NeuralNetwork(structure,1,1.0,ActivationFunctions::dummy,ActivationFunctions::dummy);
@@ -46,7 +46,7 @@ public class Main {
 //        System.out.println("\nresult of multiplication:" + Arrays.toString(doubles));
 
         // test feed forward
-        Double[] testInput = {4.0,4.0,4.0};
+        Double[] testInput = {4.0,4.0};
         Double[] nn1Step1Result = nn1.step1FeedForward(testInput);
         System.out.println(Arrays.toString(nn1Step1Result));
         System.out.println("---");
@@ -68,12 +68,22 @@ public class Main {
 
         // test backpropagation
         ArrayList<TrainingDataRecord> trainingDataList = new ArrayList<>(3);
-        TrainingDataRecord record1 = new TrainingDataRecord(new Double[]{1.0, 1.0, 1.0},new Double[]{2.0,2.0});
-        TrainingDataRecord record2 = new TrainingDataRecord(new Double[]{2.0, 2.0, 2.0},new Double[]{4.0,4.0});
-        TrainingDataRecord record3 = new TrainingDataRecord(new Double[]{3.0, 3.0, 3.0},new Double[]{6.0,6.0});
+        TrainingDataRecord record1 = new TrainingDataRecord(new Double[]{1.0, 1.0,},new Double[]{2.0,2.0});
+        TrainingDataRecord record2 = new TrainingDataRecord(new Double[]{2.0, 2.0,},new Double[]{4.0,4.0});
+        TrainingDataRecord record3 = new TrainingDataRecord(new Double[]{3.0, 3.0,},new Double[]{6.0,6.0});
         trainingDataList.add(record1);
         trainingDataList.add(record2);
         trainingDataList.add(record3);
+
+
+//            ArrayList<Double[]> partialDeltasList = new ArrayList<>(structure.length);
+//            System.out.println("structure.length:" + structure.length);
+//            System.out.println("partialDeltasList.size:" + partialDeltasList.size()); // sprawdzic jak zrobic pusta array lsite z n elementami!!!
+//
+//            // for loop after each layer
+//            for (int i = 0; i < nn1.activationsMatrix.size(); i++) {
+//                partialDeltasList.set(i,NumPyLike.zeros(nn1.weightedSumsMatrix.get(i).length));
+//            }
 
         nn1.step2BackPropagation(trainingDataList);
 

@@ -49,8 +49,7 @@ public class JhTests
             Double[][] eee = NumPyLike.transposeMatrix(new Double[][] {{5.0,6.0}});
             List<Double [][]> testList5 = new ArrayList<>();
             testList5.add(eee);
-            System.out.println("eee");
-            System.out.println(eee.length);
+            System.out.println("eee:");
             Utils.displayArrayMatrix2(testList5);
             Double [][] fff = NumPyLike.vectorTimesTransposedVector(ddd,eee);
             List<Double [][]> testList4 = new ArrayList<>();

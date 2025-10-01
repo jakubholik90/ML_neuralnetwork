@@ -71,10 +71,8 @@ public abstract class NumPyLike {
 
     public static Double[][] vectorTimesTransposedVector (Double[] inputVector, Double[][] inputTransposedVector) {
         //checking if the input size is correct
-        for (int i = 0; i < inputTransposedVector.length; i++) {
-            if (inputTransposedVector[i].length != 1) {
-                throw new WrongInputSizeException("inputTransposedVector have size > 1");
-            }
+        if (inputTransposedVector.length != 1) {
+            throw new WrongInputSizeException("inputTransposedVector have size > 1 (size:" + inputTransposedVector.length+ ")");
         }
 
         Double[][] returnArray = new Double[inputVector.length][inputTransposedVector.length];
