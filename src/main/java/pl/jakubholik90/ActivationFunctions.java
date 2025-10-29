@@ -31,7 +31,7 @@ public abstract class ActivationFunctions {
             }
         } else {
             if (z >= 0) {
-                returnValue = 1.0; //relu(z) = 1 if z is positive
+                returnValue = z; //relu(z) = z if z is positive
             } else {
                 returnValue = 0.1 * z; //relu(z) = 0.1*z if z is negative
             }
@@ -45,7 +45,7 @@ public abstract class ActivationFunctions {
         if (calculateDerivative) {
             returnValue = sigmoid(z,false) * (1 - sigmoid(z,false)); //derivative from sigmoid, recursive by one step
         } else {
-            returnValue = 1 / (1 + Math.exp(z));
+            returnValue = 1 / (1 + Math.exp(-z));
         }
         return returnValue;
     }
