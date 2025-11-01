@@ -175,8 +175,8 @@ public class NeuralNetwork {
                     error = error + Math.pow(difference[k],2);
                 }
 
-                //for loop after each layer (backwards, starting from output layer
-                for (int layer = this.activationsMatrix.size()-1; layer >= 0; layer--) {
+                //for loop after each layer (backwards, starting from output layer, ending at 1st hidden layer)
+                for (int layer = this.activationsMatrix.size()-1; layer > 0; layer--) {
                     System.out.println("layer:" + layer + " is output layer: " + (layer == (this.activationsMatrix.size()-1)));
                     // checking if actual layer is output layer
                     if (layer == (this.activationsMatrix.size()-1)) {
@@ -192,7 +192,7 @@ public class NeuralNetwork {
 
 
                             // slicing weights matrix (cutting of bias, column 0)
-                            Double[][] slicedWeightsMatrix = NumPyLike.slice2DArray(this.weightsMatrix.get(layer+1), 0, this.weightsMatrix.get(layer).length, 1, this.weightsMatrix.get(layer)[layerElement].length - 1);
+                            Double[][] slicedWeightsMatrix = NumPyLike.slice2DArray(this.weightsMatrix.get(layer+1), 0, this.weightsMatrix.get(layer+1).length-1, 1, this.weightsMatrix.get(layer+1)[layerElement].length - 1);
                             // transposing weights matrix and cutting of bias (index 0 in each layer)
                             Double[][] transposedAndSlicedWeightsMatrix = NumPyLike.transposeMatrix(slicedWeightsMatrix);
 
@@ -202,14 +202,15 @@ public class NeuralNetwork {
                     }
 
                     Double[] doubles = this.activationsMatrix.get(layer - 1);
-                    Double[][] activationMatrixTransposed = new Double[1][this.activationsMatrix.get(layer-1).length];
+                    Double[] activationMatrixTransposedVector = new Double[this.activationsMatrix.get(layer-1).length];
                     for (int k = 0; k < this.activationsMatrix.get(layer-1).length; k++) {
-                        activationMatrixTransposed[0][k] = this.activationsMatrix.get(layer-1)[k];
-                        System.out.println("activationMatrixTransposed[0][" + k + "]:" + activationMatrixTransposed[0][k]);
+                        activationMatrixTransposedVector[k] = this.activationsMatrix.get(layer-1)[k];
+                        System.out.println("activationMatrixTransposedVector[" + k + "]:" + activationMatrixTransposedVector[k]);
                     }
+                    
 
                     // sum of weight deviations in each layer (sum in whole layer)
-                    deltaWlist.set(layer,NumPyLike.add2Arrays(deltaWlist.get(layer),NumPyLike.vectorTimesTransposedVector(partialDeltasList.get(layer), activationMatrixTransposed)));
+                    deltaWlist.set(layer,NumPyLike.add2Arrays(deltaWlist.get(layer),NumPyLike.vectorTimesTransposedVector(partialDeltasList.get(layer), activationMatrixTransposedVector)));
                     for (int i = 0; i < deltaWlist.get(layer).length; i++) {
                         for (int k = 0; k < deltaWlist.get(layer)[i].length; k++) {
                             deltaWlist.get(layer)[i][k] = deltaWlist.get(layer)[i][k]*(-1)*this.eta;

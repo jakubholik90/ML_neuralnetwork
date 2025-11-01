@@ -46,7 +46,7 @@ public class JhTests
             System.out.println("ddd:");
             System.out.println(ddd.length);
             Utils.displayArrayMatrix(testList6);
-            Double[][] eee = NumPyLike.transposeMatrix(new Double[][] {{5.0,6.0}});
+            Double[][] eee = NumPyLike.transposeVector(new Double[] {5.0,6.0});
             List<Double [][]> testList5 = new ArrayList<>();
             testList5.add(eee);
             System.out.println("eee:");

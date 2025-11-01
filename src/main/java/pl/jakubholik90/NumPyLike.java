@@ -69,18 +69,18 @@ public abstract class NumPyLike {
         return returnArray;
     }
 
-    public static Double[][] vectorTimesTransposedVector (Double[] inputVector, Double[][] inputTransposedVector) {
+    public static Double[][] vectorTimesTransposedVector (Double[] inputVector, Double[] inputTransposedVector) {
         //checking if the input size is correct
-        if (inputTransposedVector.length != 1) {
-            throw new WrongInputSizeException("inputTransposedVector have size > 1 (size:" + inputTransposedVector.length+ ")");
-        }
+//        if (inputTransposedVector.length != 1) {
+//            throw new WrongInputSizeException("inputTransposedVector have size > 1 (size:" + inputTransposedVector.length+ ")");
+//        }
 
         Double[][] returnArray = new Double[inputVector.length][inputTransposedVector.length];
 
         for (int rows = 0; rows < inputVector.length; rows++) {
             double returnValue = 0;
             for (int columns = 0; columns < inputTransposedVector.length; columns++) {
-                returnArray[rows][columns] = inputVector[rows]*inputTransposedVector[columns][0];
+                returnArray[rows][columns] = inputVector[rows]*inputTransposedVector[columns];
             }
         }
         return returnArray;
@@ -97,6 +97,15 @@ public abstract class NumPyLike {
     return returnArray;
     }
 
+    //transposing of vector
+    public static Double[][] transposeVector (Double[] inputVector) {
+        Double[][] returnArray = new Double[1][inputVector.length];
+            for (int columns = 0; columns < inputVector.length; columns++) {
+                returnArray[0][columns] = inputVector[columns];
+            }
+        return returnArray;
+    }
+
 
 
 
@@ -106,6 +115,12 @@ public abstract class NumPyLike {
         boolean colStartPos = (colStart>=0);
         boolean rowEndOK = (rowEnd>=rowStart);
         boolean colEndOK = (colEnd>=colStart);
+
+        //checking message
+        System.out.println("""
+                slice to be performed on array sized: """ + inputArray.length + "x" + inputArray[0].length + """
+                from row:""" + rowStart + " to " + rowEnd + """
+                from col:""" + colStart + " to " + colEnd);
 
         if (!rowStartPos) {
             throw new WrongInputSizeException("Incorrect input, slice2DArray cannot be performed. rowStart is negative");
