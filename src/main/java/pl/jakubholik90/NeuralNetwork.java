@@ -19,7 +19,7 @@ public class NeuralNetwork {
     public NeuralNetwork(int[] structure) {
         // simple constructor, passing only structure
         this.structure = structure;
-        this.numberOfIterations = 10;
+        this.numberOfIterations = 3000;
         this.eta = 0.01;
         this.outputLayerActivationFunction = ActivationFunctions::leakyRelu;
         this.hiddenLayerActivationFunction = ActivationFunctions::sigmoid;
@@ -167,7 +167,7 @@ public class NeuralNetwork {
 
                 }
                 // loop after each element in output layer
-                System.out.println("dataRecord.trainingOutput().length;:" + dataRecord.trainingOutput().length);
+                // System.out.println("dataRecord.trainingOutput().length;:" + dataRecord.trainingOutput().length);
                 for (int k = 0; k < dataRecord.trainingOutput().length; k++) {
                     calculatedPrediction[k] = this.step1FeedForward(dataRecord.trainingInput())[k];
                     difference[k] = calculatedPrediction[k] - dataRecord.trainingOutput()[k];
@@ -177,7 +177,7 @@ public class NeuralNetwork {
 
                 //for loop after each layer (backwards, starting from output layer, ending at 1st hidden layer)
                 for (int layer = this.activationsMatrix.size()-1; layer > 0; layer--) {
-                    System.out.println("layer:" + layer + " is output layer: " + (layer == (this.activationsMatrix.size()-1)));
+                    // System.out.println("layer:" + layer + " is output layer: " + (layer == (this.activationsMatrix.size()-1)));
                     // checking if actual layer is output layer
                     if (layer == (this.activationsMatrix.size()-1)) {
                         //for loop after each output element
@@ -205,7 +205,7 @@ public class NeuralNetwork {
                     Double[] activationMatrixTransposedVector = new Double[this.activationsMatrix.get(layer-1).length];
                     for (int k = 0; k < this.activationsMatrix.get(layer-1).length; k++) {
                         activationMatrixTransposedVector[k] = this.activationsMatrix.get(layer-1)[k];
-                        System.out.println("activationMatrixTransposedVector[" + k + "]:" + activationMatrixTransposedVector[k]);
+                        // System.out.println("activationMatrixTransposedVector[" + k + "]:" + activationMatrixTransposedVector[k]);
                     }
                     
 
@@ -214,7 +214,7 @@ public class NeuralNetwork {
                     for (int i = 0; i < deltaWlist.get(layer).length; i++) {
                         for (int k = 0; k < deltaWlist.get(layer)[i].length; k++) {
                             deltaWlist.get(layer)[i][k] = deltaWlist.get(layer)[i][k]*(-1)*this.eta;
-                            System.out.println("deltaWlist.get(" + layer+ ")[" + i + "][" + k + "]" + deltaWlist.get(layer)[i][k]);
+                            // System.out.println("deltaWlist.get(" + layer+ ")[" + i + "][" + k + "]" + deltaWlist.get(layer)[i][k]);
                         }
                     }
                 }
@@ -225,7 +225,7 @@ public class NeuralNetwork {
                 for (int layerElement = 0; layerElement < this.weightsMatrix.get(layer).length; layerElement++) {
                     for (int layerElement2 = 0; layerElement2 < this.weightsMatrix.get(layer)[layerElement].length; layerElement2++) {
                          Double adjustmentValue = deltaWlist.get(layer)[layerElement][layerElement2] / trainingDataRecordList.size();
-                        System.out.println("adjustmentValue:" + adjustmentValue);
+                         // System.out.println("adjustmentValue:" + adjustmentValue);
                          this.weightsMatrix.get(layer)[layerElement][layerElement2] = this.weightsMatrix.get(layer)[layerElement][layerElement2] + adjustmentValue; // adjusting weight with delta W
                          deltaWlist.get(layer)[layerElement][layerElement2] = 0.0; //resetting delta W
                     }

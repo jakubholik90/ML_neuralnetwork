@@ -51,11 +51,11 @@ public class JhTests
             testList5.add(eee);
             System.out.println("eee:");
             Utils.displayArrayMatrix2(testList5);
-            Double [][] fff = NumPyLike.vectorTimesTransposedVector(ddd,eee);
-            List<Double [][]> testList4 = new ArrayList<>();
-            testList4.add(fff);
-            System.out.println("fff:");
-            Utils.displayArrayMatrix2(testList4);
+            // Double [][] fff = NumPyLike.vectorTimesTransposedVector(ddd,eee);
+            // List<Double [][]> testList4 = new ArrayList<>();
+            // testList4.add(fff);
+            // System.out.println("fff:");
+            // Utils.displayArrayMatrix2(testList4);
 
 
 

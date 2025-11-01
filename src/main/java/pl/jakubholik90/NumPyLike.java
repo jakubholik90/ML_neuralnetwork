@@ -117,10 +117,10 @@ public abstract class NumPyLike {
         boolean colEndOK = (colEnd>=colStart);
 
         //checking message
-        System.out.println("""
-                slice to be performed on array sized: """ + inputArray.length + "x" + inputArray[0].length + """
-                from row:""" + rowStart + " to " + rowEnd + """
-                from col:""" + colStart + " to " + colEnd);
+        // System.out.println("""
+//                slice to be performed on array sized: """ + inputArray.length + "x" + inputArray[0].length + """
+//                from row:""" + rowStart + " to " + rowEnd + """
+//                from col:""" + colStart + " to " + colEnd);
 
         if (!rowStartPos) {
             throw new WrongInputSizeException("Incorrect input, slice2DArray cannot be performed. rowStart is negative");
