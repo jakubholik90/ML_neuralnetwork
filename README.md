@@ -1,2 +1,2 @@
-#Neural Network
-inspired by workshop by https://github.com/gannimet/
+# Neural Network
+inspired by workshop with https://github.com/gannimet/
