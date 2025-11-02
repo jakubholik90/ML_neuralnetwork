@@ -155,7 +155,7 @@ public class NeuralNetwork {
 
             // Double[] calculatedPrediction = new Double[trainingDataRecordList.size()]; - checking lower line
             Double[] difference = new Double[trainingDataRecordList.getFirst().trainingOutput().length]; // difference between calculated preduction and given output in training data
-            Double[] outputLayerDerivative = new Double[trainingDataRecordList.size()];
+            Double[] outputLayerDerivative = new Double[this.activationsMatrix.getLast().length];
             double error = 0.0;
 
             //for loop after each training data record
@@ -196,7 +196,7 @@ public class NeuralNetwork {
                             //weight from current neuron to next layer neuron
                             //add 1 to neuron index if bias is present in current layer
                             int weightIndex = neuron + 1;
-                            sum = +this.weightsMatrix.get(layer + 1)[nextNeuron][weightIndex] * partialDeltasList.get(layer + 1)[nextNeuron];
+                            sum += this.weightsMatrix.get(layer + 1)[nextNeuron][weightIndex] * partialDeltasList.get(layer + 1)[nextNeuron];
                         }
                         partialDeltasList.get(layer)[neuron] = sum * this.runHiddenActivationFunction(this.weightedSumsMatrix.get(layer)[neuron], true);
                     }
