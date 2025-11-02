@@ -8,13 +8,9 @@ public class Main {
     public static void main(String[] args) {
 
         int[] structure = new int[] {3,4,1};
-        NeuralNetwork nn1 = new NeuralNetwork(structure);
+        NeuralNetwork nn1 = new NeuralNetwork(structure,500,0.01,ActivationFunctions::sigmoid,ActivationFunctions::leakyRelu);
 
-        //test neuralnetwork.build()
         nn1.step0Build();
-
-        Double[] testInput = {0.0,1.0,0.0};
-        nn1.step1FeedForward(testInput);
 
 
         ArrayList<TrainingDataRecord> trainingDataList = new ArrayList<>(8);
@@ -35,10 +31,15 @@ public class Main {
         trainingDataList.add(record6);
         trainingDataList.add(record7);
 
+        Double[] testInput = {0.0,1.0,0.0};
+        Double[] calculatedValueBefore = nn1.step1FeedForward(testInput);
+        System.out.println("calculated value before training: " + Arrays.toString(calculatedValueBefore));
 
         nn1.step2BackPropagation(trainingDataList);
 
+        Double[] calculatedValueAfter = nn1.step1FeedForward(testInput);
 
+        System.out.println("calculated value after training: " + Arrays.toString(calculatedValueAfter));
 
     }
 }

@@ -1,6 +1,7 @@
 package pl.jakubholik90;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class NeuralNetwork {
     public NeuralNetwork(int[] structure) {
         // simple constructor, passing only structure
         this.structure = structure;
-        this.numberOfIterations = 3000;
+        this.numberOfIterations = 1000;
         this.eta = 0.01;
         this.outputLayerActivationFunction = ActivationFunctions::leakyRelu;
         this.hiddenLayerActivationFunction = ActivationFunctions::sigmoid;
@@ -74,7 +75,14 @@ public class NeuralNetwork {
             if (i==0) {
                 weightsMatrixLList.add(new Double[0][0]); // in layer 0 there ist empty weights matrix, we want nummeration to start with 1
             } else {
-                Double[][] layerWeights = NumPyLike.randomMinus1to1(this.weightedSumsMatrix.get(i).length,this.activationsMatrix.get(i-1).length);
+
+
+                // tutaj zmienione random na jedynki dla testow
+                // Double[][] layerWeights = NumPyLike.randomMinus1to1(this.weightedSumsMatrix.get(i).length,this.activationsMatrix.get(i-1).length);
+
+
+
+                Double[][] layerWeights = NumPyLike.ones2D(this.weightedSumsMatrix.get(i).length,this.activationsMatrix.get(i-1).length);
                 weightsMatrixLList.add(layerWeights);
             }
         }
@@ -153,8 +161,9 @@ public class NeuralNetwork {
 
         //for loop after max. iterations number
         for (int iteration = 0; iteration < this.numberOfIterations; iteration++) {
-            Double[] calculatedPrediction = new Double[trainingDataRecordList.size()];
-            Double[] difference = new Double[trainingDataRecordList.size()]; // difference between calculated preduction and given output in training data
+            // Double[] calculatedPrediction = new Double[trainingDataRecordList.size()]; - checking lower line
+            Double[] calculatedPrediction = new Double[trainingDataRecordList.getFirst().trainingOutput().length];
+            Double[] difference = new Double[trainingDataRecordList.getFirst().trainingOutput().length]; // difference between calculated preduction and given output in training data
             Double[] outputLayerDerivative = new Double[trainingDataRecordList.size()];
             double error = 0.0;
 
@@ -210,13 +219,24 @@ public class NeuralNetwork {
                     
 
                     // sum of weight deviations in each layer (sum in whole layer)
-                    deltaWlist.set(layer,NumPyLike.add2Arrays(deltaWlist.get(layer),NumPyLike.vectorTimesTransposedVector(partialDeltasList.get(layer), activationMatrixTransposedVector)));
-                    for (int i = 0; i < deltaWlist.get(layer).length; i++) {
-                        for (int k = 0; k < deltaWlist.get(layer)[i].length; k++) {
-                            deltaWlist.get(layer)[i][k] = deltaWlist.get(layer)[i][k]*(-1)*this.eta;
-                            // System.out.println("deltaWlist.get(" + layer+ ")[" + i + "][" + k + "]" + deltaWlist.get(layer)[i][k]);
+
+//                    for (int i = 0; i < deltaWlist.get(layer).length; i++) {
+//                        for (int k = 0; k < deltaWlist.get(layer)[i].length; k++) {
+//                            deltaWlist.get(layer)[i][k] = deltaWlist.get(layer)[i][k]*(-1)*this.eta;
+//                            // System.out.println("deltaWlist.get(" + layer+ ")[" + i + "][" + k + "]" + deltaWlist.get(layer)[i][k]);
+//                        }
+//                    }
+                    Double[][] deltaWToAdd = NumPyLike.vectorTimesTransposedVector(partialDeltasList.get(layer), activationMatrixTransposedVector);
+                    for (int i = 0; i < deltaWToAdd.length; i++) {
+                        for (int j = 0; j < deltaWToAdd[i].length; j++) {
+                            deltaWToAdd[i][j] = deltaWToAdd[i][j]*(-1)*this.eta;
                         }
                     }
+                    deltaWlist.set(layer,NumPyLike.add2Arrays(deltaWlist.get(layer),deltaWToAdd));
+
+
+
+
                 }
             }
 
@@ -234,7 +254,7 @@ public class NeuralNetwork {
 
 
             this.errorProgression.add(error); // adding current error to progression
-            System.out.println("iteration:" + iteration + ", error:" + error);
+            System.out.println("iteration:" + iteration + ", difference:" + Arrays.toString(difference) + ", error:" + error + ", caculatedPrediction:" + Arrays.toString(calculatedPrediction));
         }
 
     }

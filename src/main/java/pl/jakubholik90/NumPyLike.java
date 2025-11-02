@@ -31,6 +31,16 @@ public abstract class NumPyLike {
         return returnArray;
     }
 
+    public static Double[][] ones2D(int numberOfRows, int numberOfColumns) {
+        Double[][] returnArray = new Double[numberOfRows][numberOfColumns];
+        for (int i = 0; i < numberOfRows; i++) {
+            for (int j = 0; j < numberOfColumns; j++) {
+                returnArray[i][j] = 1.0;
+            }
+        }
+        return returnArray;
+    }
+
     public static Double[][] randomMinus1to1(int numberOfRows, int numberOfColumns) {
         Double[][] returnArray = new Double[numberOfRows][numberOfColumns];
         Random random = new Random();
