@@ -107,8 +107,8 @@ public class NeuralNetwork {
                 }
             } else {
                 // is in hiddenlayer layer
-                for (int j = 1; j < this.weightedSumsMatrix.get(i).length; j++) { // sarting foorm i=1 due to bias
-                    this.activationsMatrix.get(i)[j] = this.runHiddenActivationFunction(weightedSumsMatrix.get(i)[j], false);
+                for (int j = 0; j < this.weightedSumsMatrix.get(i).length; j++) { // taking activationMatrix[j+1] due to bias
+                    this.activationsMatrix.get(i)[j+1] = this.runHiddenActivationFunction(weightedSumsMatrix.get(i)[j], false);
                 }
             }
         }

@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) {
 
         int[] structure = new int[] {3,4,1};
-        NeuralNetwork nn1 = new NeuralNetwork(structure,500,0.01,ActivationFunctions::sigmoid,ActivationFunctions::leakyRelu);
+        NeuralNetwork nn1 = new NeuralNetwork(structure,3000,0.01,ActivationFunctions::dummy,ActivationFunctions::sigmoid);
 
         nn1.step0Build();
 
