@@ -1,4 +1,4 @@
-package pl.jakubholik90;
+package pl.jakubholik90.domains;
 
 public abstract class ActivationFunctions {
     //set of activation functions for nodes

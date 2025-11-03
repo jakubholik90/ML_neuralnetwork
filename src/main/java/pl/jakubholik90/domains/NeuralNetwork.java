@@ -1,4 +1,7 @@
-package pl.jakubholik90;
+package pl.jakubholik90.domains;
+
+import pl.jakubholik90.WrongInputSizeException;
+import pl.jakubholik90.others.NumPyLike;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +38,14 @@ public class NeuralNetwork {
         this.outputLayerActivationFunction = outputLayerActivationFunction;
         this.hiddenLayerActivationFunction = hiddenLayerActivationFunction;
         this.errorProgression = new ArrayList<>(this.numberOfIterations);
+    }
+
+    //getters
+    public int[] getStructure() {
+        return structure;
+    }
+    public List<Double[]> getActivationMatrix() {
+        return activationsMatrix;
     }
 
     // STEP 0: main method to build all necessary subcomponents
@@ -223,10 +234,8 @@ public class NeuralNetwork {
                 }
             }
 
-
-
             this.errorProgression.add(error); // adding current error to progression
-            System.out.println("iteration:" + iteration + ", difference:" + Arrays.toString(difference) + ", error:" + error);
+            // System.out.println("iteration:" + iteration + ", difference:" + Arrays.toString(difference) + ", error:" + error);
         }
 
     }

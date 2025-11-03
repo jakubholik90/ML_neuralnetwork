@@ -1,14 +1,18 @@
 package pl.jakubholik90;
 
+import pl.jakubholik90.domains.ActivationFunctions;
+import pl.jakubholik90.domains.NeuralNetwork;
+import pl.jakubholik90.domains.TrainingDataRecord;
+import pl.jakubholik90.ui.ConsoleUI;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
 
-        int[] structure = new int[] {3,4,1};
-        NeuralNetwork nn1 = new NeuralNetwork(structure,3000,0.01,ActivationFunctions::dummy,ActivationFunctions::sigmoid);
+        int[] structure = new int[] {3,4,2,1};
+        NeuralNetwork nn1 = new NeuralNetwork(structure,3000,0.01, ActivationFunctions::dummy,ActivationFunctions::sigmoid);
 
         nn1.step0Build();
 
@@ -33,13 +37,15 @@ public class Main {
 
         Double[] testInput = {0.0,1.0,0.0};
         Double[] calculatedValueBefore = nn1.step1FeedForward(testInput);
-        System.out.println("calculated value before training: " + Arrays.toString(calculatedValueBefore));
+        // System.out.println("calculated value before training: " + Arrays.toString(calculatedValueBefore));
 
         nn1.step2BackPropagation(trainingDataList);
 
         Double[] calculatedValueAfter = nn1.step1FeedForward(testInput);
 
-        System.out.println("calculated value after training: " + Arrays.toString(calculatedValueAfter));
+        // System.out.println("calculated value after training: " + Arrays.toString(calculatedValueAfter));
+
+        ConsoleUI.showNeuralNetwork(nn1,testInput,false );
 
     }
 }

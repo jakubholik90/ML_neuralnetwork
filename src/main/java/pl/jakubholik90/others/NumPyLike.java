@@ -1,4 +1,6 @@
-package pl.jakubholik90;
+package pl.jakubholik90.others;
+
+import pl.jakubholik90.WrongInputSizeException;
 
 import java.util.Random;
 

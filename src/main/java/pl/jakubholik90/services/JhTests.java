@@ -1,7 +1,10 @@
-package pl.jakubholik90;
+package pl.jakubholik90.services;
+
+import pl.jakubholik90.others.NumPyLike;
+import pl.jakubholik90.others.Utils;
+import pl.jakubholik90.WrongInputSizeException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class JhTests

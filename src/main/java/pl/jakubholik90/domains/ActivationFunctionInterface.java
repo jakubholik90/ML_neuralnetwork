@@ -1,4 +1,4 @@
-package pl.jakubholik90;
+package pl.jakubholik90.domains;
 
 @FunctionalInterface
 public interface ActivationFunctionInterface {

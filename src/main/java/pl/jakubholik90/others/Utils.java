@@ -1,4 +1,4 @@
-package pl.jakubholik90;
+package pl.jakubholik90.others;
 
 import java.util.Arrays;
 import java.util.Collections;
