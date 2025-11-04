@@ -1,8 +1,6 @@
-package pl.jakubholik90.services;
+package pl.jakubholik90.others;
 
-import pl.jakubholik90.others.NumPyLike;
-import pl.jakubholik90.others.Utils;
-import pl.jakubholik90.WrongInputSizeException;
+import pl.jakubholik90.exceptions.WrongInputSizeException;
 
 import java.util.ArrayList;
 import java.util.List;

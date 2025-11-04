@@ -1,10 +1,9 @@
 package pl.jakubholik90.domains;
 
-import pl.jakubholik90.WrongInputSizeException;
+import pl.jakubholik90.exceptions.WrongInputSizeException;
 import pl.jakubholik90.others.NumPyLike;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 

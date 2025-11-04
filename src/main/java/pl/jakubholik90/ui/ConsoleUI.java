@@ -1,13 +1,46 @@
 package pl.jakubholik90.ui;
 
 import pl.jakubholik90.domains.NeuralNetwork;
+import pl.jakubholik90.menus.MenuItem;
+import pl.jakubholik90.menus.MenuTable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-public class ConsoleUI {
+public class ConsoleUI implements UI{
 
-    public static void showNeuralNetwork(NeuralNetwork neuralNetwork, Double[] inputData, boolean showEmpty) {
+    private final Scanner scanner;
+    private boolean isWindows;
+
+
+    public ConsoleUI() {
+        this.scanner = new Scanner(System.in);
+        this.isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
+    }
+
+
+    @Override
+    public void clearScreen() {
+        try {
+            if (isWindows) {
+                // Windows: Use ProcessBuilder to execute 'cls'
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                // Unix/Linux/Mac: Use ANSI escape codes
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+
+                // Alternative: execute 'clear' command
+                // new ProcessBuilder("clear").inheritIO().start().waitFor();
+            }
+        } catch (Exception e) {
+            System.out.println("System not recognized for clearing the screen.");
+        }
+    }
+
+    @Override
+    public void displayNeuralNetwork(NeuralNetwork neuralNetwork, Double[] inputData, boolean showEmpty) {
         int[] structure = neuralNetwork.getStructure();
         List<Double[]> activationsMatrix = neuralNetwork.getActivationMatrix();
         List<String[]> activationsToShow = new ArrayList<>();
@@ -88,5 +121,25 @@ public class ConsoleUI {
         }
     }
 
+    @Override
+    public void displayMessage(String message) {
+        System.out.println(message);
+    }
 
+    @Override
+    public int displayMenuAskChoice(MenuTable menuTable) {
+        String title = menuTable.getTitle();
+        displayMessage("--- " + title + " ---");
+        int menuSize = menuTable.getMenuSize();
+        for (int id = 0; id < menuSize; id++) {
+            MenuItem menuItemById = menuTable.getMenuItemById(id);
+            String name = menuItemById.name();
+            String description = menuItemById.description();
+            String lineToShow = id + ": " + name + " - " + description;
+            displayMessage(lineToShow);
+        }
+        displayMessage("Please enter your choice (use option number): ");
+        int userChoice = Integer.valueOf(new Scanner(System.in).nextLine());
+        return userChoice;
+    }
 }
