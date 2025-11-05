@@ -2,9 +2,7 @@ package pl.jakubholik90.menus;
 
 import pl.jakubholik90.ui.UI;
 
-import java.util.ArrayList;
-
-public class MainMenu extends Menu{
+public class MainMenu extends MenuAbstract {
 
     private NewModifyMenu newModifyMenu;
 

@@ -1,21 +1,24 @@
 package pl.jakubholik90.dto;
 
 
+import pl.jakubholik90.domains.ActivationFunctionInterface;
+import pl.jakubholik90.domains.ActivationFunctions;
+
 public class NeuralNetworkConfig {
 
     private int[] structure;
     private int numberOfIterations;
     private double eta;
-    private String outputLayerActivationFunction;
-    private String hiddenLayerActivationFunction;
+    private ActivationFunctionInterface outputLayerActivationFunction;
+    private ActivationFunctionInterface hiddenLayerActivationFunction;
 
     public NeuralNetworkConfig() {
         // default config
         this.structure = new int[] {3,4,1};
         this.numberOfIterations = 100;
         this.eta = 0.01;
-        this.outputLayerActivationFunction = ActivationFunctionsNames.SIGMOID.toString();
-        this.hiddenLayerActivationFunction = ActivationFunctionsNames.LEAKY_RELU.toString();
+        this.outputLayerActivationFunction = ActivationFunctions::sigmoid;
+        this.hiddenLayerActivationFunction = ActivationFunctions::leakyRelu;
     }
 
     public void setNumberOfInputs(int numberOfInputs) {
@@ -72,16 +75,33 @@ public class NeuralNetworkConfig {
         this.eta = eta;
     }
 
-    public void setOutputLayerActivationFunction(String activationFunction) {
+    private ActivationFunctionInterface setLayerActivationFunction(String activationFunction) {
         if (checkActivationFunctionExists(activationFunction)) {
-            this.outputLayerActivationFunction = activationFunction;
+            ActivationFunctionsNames activationFunctionName = ActivationFunctionsNames.valueOf(activationFunction);
+            switch (activationFunctionName) {
+                case SIGMOID:
+                    return ActivationFunctions::sigmoid;
+                case RELU:
+                    return ActivationFunctions::relu;
+                case LEAKY_RELU:
+                    return ActivationFunctions::leakyRelu;
+                case DUMMY:
+                    return ActivationFunctions::leakyRelu;
+                default:
+                    return ActivationFunctions::dummy;
+            }
+        } else {
+            // here to be complete in the future: error exception handling
+            return ActivationFunctions::dummy;
         }
     }
 
     public void setHiddenLayerActivationFunction(String activationFunction) {
-        if (checkActivationFunctionExists(activationFunction)) {
-            this.hiddenLayerActivationFunction = activationFunction;
-        }
+        this.hiddenLayerActivationFunction = setLayerActivationFunction(activationFunction);
+    }
+
+    public void setOutputLayerActivationFunction(String activationFunction) {
+        this.outputLayerActivationFunction = setLayerActivationFunction(activationFunction);
     }
 
     private boolean checkActivationFunctionExists(String functionName) {
@@ -107,11 +127,11 @@ public class NeuralNetworkConfig {
         return eta;
     }
 
-    public String getOutputLayerActivationFunction() {
+    public ActivationFunctionInterface getOutputLayerActivationFunction() {
         return outputLayerActivationFunction;
     }
 
-    public String getHiddenLayerActivationFunction() {
+    public ActivationFunctionInterface getHiddenLayerActivationFunction() {
         return hiddenLayerActivationFunction;
     }
 }

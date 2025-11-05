@@ -2,7 +2,7 @@ package pl.jakubholik90.menus;
 
 import pl.jakubholik90.ui.UI;
 
-public class NewModifyNewMenu extends Menu {
+public class NewModifyNewMenu extends MenuAbstract {
     private NewModifyMenu newModifyMenu;
 
     public NewModifyNewMenu(UI actualUI) {
@@ -23,13 +23,13 @@ public class NewModifyNewMenu extends Menu {
     public void handleChoice(int userChoice) {
         switch (userChoice) {
             case 0:
-                // Handle Create New Neural Network
+                // Handle Define Inputs
                 break;
             case 1:
-                // Handle Modify Existing Neural Network
+                // Handle Define Hidden Layers
                 break;
             case 2:
-                // Handle Display Current Neural Network
+                // Handle Define Outputs
                 break;
             case 3:
                 // Handle Back to Main Menu
@@ -41,7 +41,7 @@ public class NewModifyNewMenu extends Menu {
         }
     }
 
-    public void setNewModifyMenu(NewModifyMenu newModifyMenu) {
-        this.newModifyMenu = newModifyMenu;
+    public void setNewModifyMenu(NewModifyMenu menu) {
+        this.newModifyMenu = menu;
     }
 }

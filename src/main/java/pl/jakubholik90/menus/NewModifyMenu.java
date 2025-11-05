@@ -2,10 +2,9 @@ package pl.jakubholik90.menus;
 
 import pl.jakubholik90.ui.UI;
 
-import java.util.ArrayList;
-
-public class NewModifyMenu extends Menu {
+public class NewModifyMenu extends MenuAbstract {
     private MainMenu mainMenu;
+    private NewModifyNewMenu newModifyNewMenu;
 
     public NewModifyMenu(UI actualUI) {
         super(actualUI);
@@ -26,7 +25,7 @@ public class NewModifyMenu extends Menu {
         switch (userChoice) {
             case 0:
                 // Handle Create New Neural Network
-                break;
+                newModifyNewMenu.runMenu();
             case 1:
                 // Handle Modify Existing Neural Network
                 break;
@@ -43,7 +42,11 @@ public class NewModifyMenu extends Menu {
         }
     }
 
-    public void setMainMenu(MainMenu mainMenu) {
-        this.mainMenu = mainMenu;
+    public void setMainMenu(MainMenu menu) {
+        this.mainMenu = menu;
+    }
+
+    public void setNewModifyNewMenu(NewModifyNewMenu menu) {
+        this.newModifyNewMenu = menu;
     }
 }

@@ -2,10 +2,10 @@ package pl.jakubholik90.menus;
 
 import pl.jakubholik90.ui.UI;
 
-public abstract class Menu {
+public abstract class MenuAbstract {
     protected final UI actualUI;
 
-    public Menu(UI actualUI) {
+    public MenuAbstract(UI actualUI) {
         this.actualUI = actualUI;
     }
 

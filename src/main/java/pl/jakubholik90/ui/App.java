@@ -1,16 +1,13 @@
 package pl.jakubholik90.ui;
 
 import pl.jakubholik90.menus.MainMenu;
-import pl.jakubholik90.menus.Menu;
 import pl.jakubholik90.menus.NewModifyMenu;
 import pl.jakubholik90.menus.NewModifyNewMenu;
 
-import java.util.ArrayList;
-
 public class App {
-    MainMenu mainMenu;
-    NewModifyMenu newModifyMenu;
-    NewModifyNewMenu newModifyNewMenu;
+    private MainMenu mainMenu;
+    private NewModifyMenu newModifyMenu;
+    private NewModifyNewMenu newModifyNewMenu;
     UI actualUI;
 
     public App(UI actualUI) {
@@ -25,14 +22,21 @@ public class App {
     }
 
     private void initializeMenus() {
-        // assign UI to menus
+        // create new menus and assign UI to menus
         this.mainMenu = new MainMenu(actualUI);
         this.newModifyMenu = new NewModifyMenu(actualUI);
+        this.newModifyNewMenu = new NewModifyNewMenu(actualUI);
 
         // inject dependencies between menus
-        this.mainMenu.setNewModifyMenu(this.newModifyMenu);
-        this.newModifyMenu.setMainMenu(this.mainMenu);
-        this.newModifyNewMenu.setNewModifyMenu(this.newModifyMenu);
+        //"main" menu connections
+        this.mainMenu.setNewModifyMenu(this.newModifyMenu); // from MainMenu to NewModifyMenu
+
+        // "new/modify" menu connections
+        this.newModifyMenu.setMainMenu(this.mainMenu); // from NewModifyMenu to MainMenu
+        this.newModifyMenu.setNewModifyNewMenu(this.newModifyNewMenu); // from NewModifyMenu to NewModifyNewMenu
+
+        // "new/modify-new" menu connections
+        this.newModifyNewMenu.setNewModifyMenu(this.newModifyMenu); // from NewModifyNewMenu to NewModifyMen
     }
 
 
