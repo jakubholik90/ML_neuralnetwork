@@ -1,20 +1,33 @@
 package pl.jakubholik90.ui;
 
+import pl.jakubholik90.controllers.NeuralNetworkController;
+import pl.jakubholik90.domains.NeuralNetwork;
+import pl.jakubholik90.dto.NeuralNetworkConfig;
 import pl.jakubholik90.menus.MainMenu;
 import pl.jakubholik90.menus.NewModifyMenu;
 import pl.jakubholik90.menus.NewModifyNewMenu;
 
+import java.util.Arrays;
+
 public class App {
+    // internal objects
+    // menus
     private MainMenu mainMenu;
     private NewModifyMenu newModifyMenu;
     private NewModifyNewMenu newModifyNewMenu;
-    UI actualUI;
+    // ui
+    private UI actualUI;
+    // neural network and its config
+    private NeuralNetworkConfig currentConfig;
+    private NeuralNetworkController controller;
+
 
     public App(UI actualUI) {
         this.actualUI = actualUI;
+        this.currentConfig = null;
+        this.controller = new NeuralNetworkController();
         this.initializeMenus();
     }
-
 
     public void runApp() {
         actualUI.displayMessage("Welcome to the Neural Network Application!");
@@ -22,10 +35,11 @@ public class App {
     }
 
     private void initializeMenus() {
-        // create new menus and assign UI to menus
-        this.mainMenu = new MainMenu(actualUI);
-        this.newModifyMenu = new NewModifyMenu(actualUI);
-        this.newModifyNewMenu = new NewModifyNewMenu(actualUI);
+        // create new menus
+        this.mainMenu = new MainMenu(actualUI,this);
+        this.newModifyMenu = new NewModifyMenu(actualUI,this);
+        this.newModifyNewMenu = new NewModifyNewMenu(actualUI,this);
+
 
         // inject dependencies between menus
         //"main" menu connections
@@ -37,6 +51,43 @@ public class App {
 
         // "new/modify-new" menu connections
         this.newModifyNewMenu.setNewModifyMenu(this.newModifyMenu); // from NewModifyNewMenu to NewModifyMen
+    }
+
+    public NeuralNetworkConfig getConfig() {
+        if (this.currentConfig == null) {
+            this.currentConfig = new NeuralNetworkConfig();
+        }
+        return this.currentConfig;
+    }
+
+    private void resetConfig() {
+        this.currentConfig = new NeuralNetworkConfig();
+    }
+
+    private void buildNeuralNetwork() {
+        if (this.currentConfig==null) {
+            actualUI.displayMessage("Neural Network configuration not found, cannot build neural network.");
+            return;
+        }
+
+        NeuralNetwork nn = controller.createNeuralNetworkFromConfig(this.currentConfig) {
+            nn.step0Build();
+            actualUI.displayMessage("Neural Network successfully created.");
+        }
+    }
+
+    private void displayCurrentConfig() {
+        if (this.currentConfig == null) {
+            actualUI.displayMessage("No Neural Network configuration found.");
+            return;
+        }
+        actualUI.displayMessage("Current Neural Network Configuration:");
+        actualUI.displayMessage("- Structure: " + Arrays.toString(this.currentConfig.getStructure()));
+        actualUI.displayMessage("- Number of iterations: " + this.currentConfig.getNumberOfIterations());
+        actualUI.displayMessage("- Learning rate (eta): " + this.currentConfig.getEta());
+        actualUI.displayMessage("- Activation function - hidden layers: " + this.currentConfig.getHiddenLayerActivationFunction());
+        actualUI.displayMessage("- Activation function - output layer: " + this.currentConfig.getOutputLayerActivationFunction());
+
     }
 
 

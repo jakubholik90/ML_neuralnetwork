@@ -130,12 +130,21 @@ public class ConsoleUI implements UI{
     public int displayMenuAskChoice(MenuTable menuTable) {
         String title = menuTable.getTitle();
         displayMessage("--- " + title + " ---");
+        if (!menuTable.getAdditionalMessage().isEmpty()) {;
+            displayMessage(menuTable.getAdditionalMessage());
+        }
         int menuSize = menuTable.getMenuSize();
         for (int id = 0; id < menuSize; id++) {
             MenuItem menuItemById = menuTable.getMenuItemById(id);
             String name = menuItemById.name();
             String description = menuItemById.description();
-            String lineToShow = id + ": " + name + " - " + description;
+            String descriptionOptional;
+            if (!description.isEmpty()) {
+                descriptionOptional = " - " + description;
+            } else {
+                descriptionOptional = "";
+            }
+            String lineToShow = id + ": " + name + descriptionOptional;
             displayMessage(lineToShow);
         }
         displayMessage("Please enter your choice (use option number): ");

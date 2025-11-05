@@ -1,5 +1,6 @@
 package pl.jakubholik90.menus;
 
+import pl.jakubholik90.ui.App;
 import pl.jakubholik90.ui.UI;
 
 public class MainMenu extends MenuAbstract {
@@ -7,13 +8,13 @@ public class MainMenu extends MenuAbstract {
     private NewModifyMenu newModifyMenu;
 
 
-    public MainMenu(UI actualUI) {
-        super(actualUI);
+    public MainMenu(UI actualUI, App app) {
+        super(actualUI, app);
     }
 
     @Override
     public MenuTable create() {
-        MenuTable menuTable = new MenuTable("Main Menu");
+        MenuTable menuTable = new MenuTable("Main Menu","");
         menuTable.addMenuItem(new MenuItem(0,"New/Modify Neural Network", "Create a new or modify an existing neural network from scratch"));
         menuTable.addMenuItem(new MenuItem(1,"Save/Load Neural Network", "Save actual or load an existing neural network from file"));
         menuTable.addMenuItem(new MenuItem(2,"Display Neural Network", "Display the structure and parameters of the neural network"));

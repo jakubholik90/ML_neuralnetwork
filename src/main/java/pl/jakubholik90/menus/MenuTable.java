@@ -5,10 +5,12 @@ import java.util.ArrayList;
 public class MenuTable {
 
     private final String title;
+    private final String additionalMessage;
     private final ArrayList<MenuItem> menuItems;
 
-    public MenuTable(String title) {
+    public MenuTable(String title, String additionalMessage) {
         this.title = title;
+        this.additionalMessage = additionalMessage;
         this.menuItems = new ArrayList<>();
     }
 
@@ -33,5 +35,7 @@ public class MenuTable {
         return title;
     }
 
-
+    public String getAdditionalMessage() {
+        return additionalMessage;
+    }
 }

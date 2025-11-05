@@ -1,18 +1,19 @@
 package pl.jakubholik90.menus;
 
+import pl.jakubholik90.ui.App;
 import pl.jakubholik90.ui.UI;
 
 public class NewModifyMenu extends MenuAbstract {
     private MainMenu mainMenu;
     private NewModifyNewMenu newModifyNewMenu;
 
-    public NewModifyMenu(UI actualUI) {
-        super(actualUI);
+    public NewModifyMenu(UI actualUI, App app) {
+        super(actualUI, app);
     }
 
     @Override
     public MenuTable create() {
-        MenuTable menuTable = new MenuTable("New/Modify Neural Network Menu");
+        MenuTable menuTable = new MenuTable("New/Modify Neural Network Menu","");
         menuTable.addMenuItem(new MenuItem(0,"Create New Neural Network", "Create a new neural network from scratch"));
         menuTable.addMenuItem(new MenuItem(1,"Modify Existing Neural Network", "Modify parameters of an existing neural network"));
         menuTable.addMenuItem(new MenuItem(2,"Display Current Neural Network", "Display the structure and parameters of the current neural network"));
