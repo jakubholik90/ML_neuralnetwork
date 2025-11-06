@@ -4,7 +4,7 @@ import pl.jakubholik90.controllers.NeuralNetworkController;
 import pl.jakubholik90.domains.NeuralNetwork;
 import pl.jakubholik90.dto.NeuralNetworkConfig;
 import pl.jakubholik90.menus.MainMenu;
-import pl.jakubholik90.menus.NewModifyMenu;
+import pl.jakubholik90.menus.ModifyNNMenu;
 import pl.jakubholik90.menus.NewModifyNewMenu;
 
 import java.util.Arrays;
@@ -13,7 +13,7 @@ public class App {
     // internal objects
     // menus
     private MainMenu mainMenu;
-    private NewModifyMenu newModifyMenu;
+    private ModifyNNMenu modifyNNMenu;
     private NewModifyNewMenu newModifyNewMenu;
     // ui
     private UI actualUI;
@@ -24,33 +24,33 @@ public class App {
 
     public App(UI actualUI) {
         this.actualUI = actualUI;
-        this.currentConfig = null;
+        this.currentConfig = new NeuralNetworkConfig();
         this.controller = new NeuralNetworkController();
         this.initializeMenus();
     }
 
     public void runApp() {
         actualUI.displayMessage("Welcome to the Neural Network Application!");
+        this.buildNeuralNetwork();
         this.mainMenu.runMenu();
     }
 
     private void initializeMenus() {
         // create new menus
         this.mainMenu = new MainMenu(actualUI,this);
-        this.newModifyMenu = new NewModifyMenu(actualUI,this);
+        this.modifyNNMenu = new ModifyNNMenu(actualUI,this);
         this.newModifyNewMenu = new NewModifyNewMenu(actualUI,this);
 
 
         // inject dependencies between menus
         //"main" menu connections
-        this.mainMenu.setNewModifyMenu(this.newModifyMenu); // from MainMenu to NewModifyMenu
+        this.mainMenu.setModifyNNMenu(this.modifyNNMenu); // from MainMenu to NewModifyMenu
 
         // "new/modify" menu connections
-        this.newModifyMenu.setMainMenu(this.mainMenu); // from NewModifyMenu to MainMenu
-        this.newModifyMenu.setNewModifyNewMenu(this.newModifyNewMenu); // from NewModifyMenu to NewModifyNewMenu
+        this.modifyNNMenu.setMainMenu(this.mainMenu); // from NewModifyMenu to MainMenu
 
         // "new/modify-new" menu connections
-        this.newModifyNewMenu.setNewModifyMenu(this.newModifyMenu); // from NewModifyNewMenu to NewModifyMen
+        this.newModifyNewMenu.setNewModifyMenu(this.modifyNNMenu); // from NewModifyNewMenu to NewModifyMen
     }
 
     public NeuralNetworkConfig getConfig() {
@@ -70,10 +70,9 @@ public class App {
             return;
         }
 
-        NeuralNetwork nn = controller.createNeuralNetworkFromConfig(this.currentConfig) {
-            nn.step0Build();
-            actualUI.displayMessage("Neural Network successfully created.");
-        }
+        NeuralNetwork nn = controller.createNeuralNetworkFromConfig(this.currentConfig);
+        nn.step0Build();
+        actualUI.displayMessage("Neural Network successfully created.");
     }
 
     private void displayCurrentConfig() {

@@ -131,24 +131,32 @@ public class ConsoleUI implements UI{
         String title = menuTable.getTitle();
         displayMessage("--- " + title + " ---");
         if (!menuTable.getAdditionalMessage().isEmpty()) {;
-            displayMessage(menuTable.getAdditionalMessage());
+            displayMessage("( " + menuTable.getAdditionalMessage() + " )");
         }
         int menuSize = menuTable.getMenuSize();
-        for (int id = 0; id < menuSize; id++) {
-            MenuItem menuItemById = menuTable.getMenuItemById(id);
-            String name = menuItemById.name();
-            String description = menuItemById.description();
-            String descriptionOptional;
-            if (!description.isEmpty()) {
-                descriptionOptional = " - " + description;
-            } else {
-                descriptionOptional = "";
-            }
-            String lineToShow = id + ": " + name + descriptionOptional;
-            displayMessage(lineToShow);
+        for (int id = 1; id < menuSize; id++) {
+            displayMenuItem(menuTable, id);
+        }
+        if (menuTable.getMenuItemById(0) != null) {
+            displayMenuItem(menuTable,0);
         }
         displayMessage("Please enter your choice (use option number): ");
-        int userChoice = Integer.valueOf(new Scanner(System.in).nextLine());
+        Scanner scanner = new Scanner(System.in);
+        int userChoice = Integer.valueOf(scanner.nextLine());
         return userChoice;
+    }
+
+    private void displayMenuItem(MenuTable menuTable, int id) {
+        MenuItem menuItem = menuTable.getMenuItemById(id);
+        String name = menuItem.name();
+        String description = menuItem.description();
+        String descriptionOptional;
+        if (!description.isEmpty()) {
+            descriptionOptional = " - " + description;
+        } else {
+            descriptionOptional = "";
+        }
+        String lineToShow = id + ": " + name + descriptionOptional;
+        displayMessage(lineToShow);
     }
 }

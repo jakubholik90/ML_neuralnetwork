@@ -22,4 +22,15 @@ public class NeuralNetworkController {
         return neuralNetwork;
     }
 
+    public NeuralNetwork createNeuralNetworkFromConfig(NeuralNetworkConfig config) {
+        NeuralNetwork neuralNetwork = new NeuralNetwork(
+                config.getStructure(),
+                config.getNumberOfIterations(),
+                config.getEta(),
+                config.getOutputLayerActivationFunction(),
+                config.getHiddenLayerActivationFunction());
+
+        return neuralNetwork;
+    }
+
 }

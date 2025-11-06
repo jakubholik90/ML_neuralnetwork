@@ -8,32 +8,50 @@ import pl.jakubholik90.ui.UI;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class NewModifyNewMenu extends MenuAbstract {
-    private ModifyNNMenu modifyNNMenu;
+public class ModifyNNMenu extends MenuAbstract {
+    private MainMenu mainMenu;
 
-    public NewModifyNewMenu(UI actualUI, App app) {
+    public ModifyNNMenu(UI actualUI, App app) {
         super(actualUI, app);
     }
 
     @Override
     public MenuTable create() {
-        MenuTable menuTable = new MenuTable("Create New Neural Network Menu","");
-        menuTable.addMenuItem(new MenuItem(0,"Inputs", "Define the number of input neurons"));
-        menuTable.addMenuItem(new MenuItem(1,"Hidden Layers", "Define the number of hidden layers and neurons in each layer"));
-        menuTable.addMenuItem(new MenuItem(2,"Outputs", "Define the number of output neurons"));
-        menuTable.addMenuItem(new MenuItem(3,"Activation Function - Output Layer", "Set activation function for output layer"));
-        menuTable.addMenuItem(new MenuItem(4,"Activation Function - Hidden Layers", "Set activation function for hidden layers"));
-        menuTable.addMenuItem(new MenuItem(5,"Back", "Return to the previous menu"));
+        MenuTable menuTable = new MenuTable("Modify Neural Network Menu","");
+        menuTable.addMenuItem(new MenuItem(1,"Display Current Neural Network", "Display the structure and parameters of the current neural network"));
+        menuTable.addMenuItem(new MenuItem(2,"Inputs", "Define the number of input neurons"));
+        menuTable.addMenuItem(new MenuItem(3,"Hidden Layers", "Define the number of hidden layers and neurons in each layer"));
+        menuTable.addMenuItem(new MenuItem(4,"Outputs", "Define the number of output neurons"));
+        menuTable.addMenuItem(new MenuItem(5,"Activation Function - Output Layer", "Set activation function for output layer"));
+        menuTable.addMenuItem(new MenuItem(6,"Activation Function - Hidden Layers", "Set activation function for hidden layers"));
+        menuTable.addMenuItem(new MenuItem(0,"Back to Main Menu", "Return to the main menu"));
         return menuTable;
     }
 
     @Override
     public void handleChoice(int userChoice) {
         switch (userChoice) {
-
+            case 1:
+                // Handle Display Current Neural Network
+                break;
+            case 2:
+                // Handle Inputs
+                handleInputs();
+            case 3:
+                // Handle Hidden Layers
+                handleHiddenLayers();
+            case 4:
+                // Handle Outputs
+                handleOutputs();
             case 5:
+                // Handle Activation Function - Output Layer
+                handleActivationFunctionOutputLayer();
+            case 6:
+                // Handle Activation Function - Hidden Layers
+                handleActivationFunctionHiddenLayers();
+            case 0:
                 // Handle Back to Main Menu
-                modifyNNMenu.runMenu();
+                mainMenu.runMenu();
             default:
                 // Handle invalid choice
                 invalidChoice();
@@ -41,8 +59,8 @@ public class NewModifyNewMenu extends MenuAbstract {
         }
     }
 
-    public void setNewModifyMenu(ModifyNNMenu menu) {
-        this.modifyNNMenu = menu;
+    public void setMainMenu(MainMenu menu) {
+        this.mainMenu = menu;
     }
 
     private void handleInputs() {
@@ -66,7 +84,8 @@ public class NewModifyNewMenu extends MenuAbstract {
         MenuTable menuTable = new MenuTable("Modify Hidden Layers Menu", additionalMessage);
         menuTable.addMenuItem(new MenuItem(1,"Insert", "Insert a new hidden layer at specified position"));
         menuTable.addMenuItem(new MenuItem(2, "Modify", "Modify the number of neurons in an existing hidden layer"));
-        menuTable.addMenuItem(new MenuItem(3," Delete", "Delete an existing hidden layer"));
+        menuTable.addMenuItem(new MenuItem(3,"Delete", "Delete an existing hidden layer"));
+        menuTable.addMenuItem(new MenuItem(0,"Back", ""));
         int menuChoice = actualUI.displayMenuAskChoice(menuTable);
         Scanner scanner = new Scanner(System.in);
         switch (menuChoice) {
@@ -98,7 +117,7 @@ public class NewModifyNewMenu extends MenuAbstract {
             case 0:
                 // Back
                 this.runMenu();
-                return;
+                break;
             default:
                 invalidChoice();
                 break;
