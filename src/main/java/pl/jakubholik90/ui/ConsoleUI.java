@@ -141,9 +141,14 @@ public class ConsoleUI implements UI{
             displayMenuItem(menuTable,0);
         }
         displayMessage("Please enter your choice (use option number): ");
-        Scanner scanner = new Scanner(System.in);
-        int userChoice = Integer.valueOf(scanner.nextLine());
+        int userChoice = Integer.valueOf(getUserInput());
         return userChoice;
+    }
+
+    @Override
+    public String getUserInput() {
+        String returnString = scanner.nextLine();
+        return returnString;
     }
 
     private void displayMenuItem(MenuTable menuTable, int id) {

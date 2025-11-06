@@ -61,8 +61,10 @@ public class NeuralNetworkConfig {
 
     private void checkHiddenLayerPosition(int position) {
         // position is 1-based index for hidden layers
-        if (position < 1 || position > this.structure.length - 2) {
-            throw new IllegalArgumentException("Invalid position for hidden layer");
+        if (position < 1) {
+            throw new IllegalArgumentException("Invalid position for hidden layer (too low)");
+        } else if (position > this.structure.length - 1) {
+            throw new IllegalArgumentException("Invalid position for hidden layer (too high)");
         }
     }
 

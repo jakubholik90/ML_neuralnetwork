@@ -12,4 +12,6 @@ public interface UI {
     public void displayMessage(String message);
 
     public int displayMenuAskChoice(MenuTable menuTable);
+
+    public String getUserInput();
 }

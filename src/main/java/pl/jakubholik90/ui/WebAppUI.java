@@ -26,4 +26,10 @@ public class WebAppUI implements UI{
         int userChoice = 0;
         return userChoice;
     }
+
+    @Override
+    public String getUserInput() {
+        //PLACEHOLDER - to be implemented in future
+        return "";
+    }
 }

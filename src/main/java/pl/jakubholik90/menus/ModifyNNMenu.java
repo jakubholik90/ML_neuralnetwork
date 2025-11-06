@@ -6,7 +6,6 @@ import pl.jakubholik90.ui.App;
 import pl.jakubholik90.ui.UI;
 
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class ModifyNNMenu extends MenuAbstract {
     private MainMenu mainMenu;
@@ -33,6 +32,7 @@ public class ModifyNNMenu extends MenuAbstract {
         switch (userChoice) {
             case 1:
                 // Handle Display Current Neural Network
+                handleDisplay();
                 break;
             case 2:
                 // Handle Inputs
@@ -63,12 +63,27 @@ public class ModifyNNMenu extends MenuAbstract {
         this.mainMenu = menu;
     }
 
+    private void handleDisplay() {
+        NeuralNetworkConfig config = app.getConfig();
+        if (config == null) {
+            actualUI.displayMessage("No Neural Network configuration found.");
+            return;
+        }
+        actualUI.displayMessage("Current Neural Network Configuration:");
+        actualUI.displayMessage("- Structure: " + Arrays.toString(config.getStructure()));
+        actualUI.displayMessage("- Number of iterations: " + config.getNumberOfIterations());
+        actualUI.displayMessage("- Learning rate (eta): " + config.getEta());
+        actualUI.displayMessage("- Activation function - hidden layers: " + config.getHiddenLayerActivationFunction());
+        actualUI.displayMessage("- Activation function - output layer: " + config.getOutputLayerActivationFunction());
+        this.runMenu();
+    }
+
+
     private void handleInputs() {
         NeuralNetworkConfig config = app.getConfig();
         actualUI.displayMessage("Actual number of input neurons: " + config.getStructure()[0]);
         actualUI.displayMessage("Enter new number of input neurons (>1): ");
-        Scanner scanner = new Scanner(System.in);
-        int inputNeurons = Integer.valueOf(scanner.nextLine());
+        int inputNeurons = Integer.valueOf(actualUI.getUserInput());
         config.setNumberOfInputs(inputNeurons);
         actualUI.displayMessage("Number of input neurons updated successfully to " + inputNeurons + ".");
         this.runMenu();
@@ -77,7 +92,7 @@ public class ModifyNNMenu extends MenuAbstract {
     private void handleHiddenLayers() {
         NeuralNetworkConfig config = app.getConfig();
         int[] structureHiddenLayers = new int[config.getStructure().length - 2];
-        for (int i = 1; i < config.getStructure().length-2; i++) {
+        for (int i = 1; i < config.getStructure().length-1; i++) {
             structureHiddenLayers[i-1] = config.getStructure()[i];
         }
         String additionalMessage = "Actual structure of hidden layers,  numbered from 1 to " + (structureHiddenLayers.length) + ": " + Arrays.toString(structureHiddenLayers);
@@ -87,30 +102,34 @@ public class ModifyNNMenu extends MenuAbstract {
         menuTable.addMenuItem(new MenuItem(3,"Delete", "Delete an existing hidden layer"));
         menuTable.addMenuItem(new MenuItem(0,"Back", ""));
         int menuChoice = actualUI.displayMenuAskChoice(menuTable);
-        Scanner scanner = new Scanner(System.in);
         switch (menuChoice) {
             case 1:
                 // Insert hidden layer
                 actualUI.displayMessage("Enter position to insert new hidden layer (1 to " + (structureHiddenLayers.length + 1) + "): ");
-                int positionToAdd = Integer.valueOf(scanner.nextLine());
+                int positionToAdd = Integer.valueOf(actualUI.getUserInput());
                 actualUI.displayMessage("Enter number of neurons for the new hidden layer (>0): ");
-                int neuronsToAdd = Integer.valueOf(scanner.nextLine());
+                int neuronsToAdd = Integer.valueOf(actualUI.getUserInput());
                 config.insertHiddenLayer(positionToAdd, neuronsToAdd);
                 actualUI.displayMessage("Hidden layer inserted successfully at position " + positionToAdd + " with " + neuronsToAdd + " neurons.");
                 break;
             case 2:
                 // Modify hidden layer
                 actualUI.displayMessage("Enter position of hidden layer to modify (1 to " + (structureHiddenLayers.length) + "): ");
-                int positionToModify = Integer.valueOf(scanner.nextLine());
+                int positionToModify = Integer.valueOf(actualUI.getUserInput());
                 actualUI.displayMessage("Enter new number of neurons for hidden layer at position " + positionToModify + " (>0): ");
-                int neuronsToModify = Integer.valueOf(scanner.nextLine());
+                int neuronsToModify = Integer.valueOf(actualUI.getUserInput());
                 config.modifyHiddenLayer(positionToModify, neuronsToModify);
                 actualUI.displayMessage("Hidden layer at position " + positionToModify + " modified successfully to " + neuronsToModify + " neurons.");
                 break;
             case 3:
                 // Delete hidden layer
+                if (config.getStructure().length <=3) {
+                    actualUI.displayMessage("Cannot delete hidden layer. At least one hidden layer must remain.");
+                    handleHiddenLayers();
+                    break;
+                }
                 actualUI.displayMessage("Enter position of hidden layer to delete (1 to " + (structureHiddenLayers.length) + "): ");
-                int positionToDelete = Integer.valueOf(scanner.nextLine());
+                int positionToDelete = Integer.valueOf(actualUI.getUserInput());
                 config.deleteHiddenLayer(positionToDelete);
                 actualUI.displayMessage("Hidden layer at position " + positionToDelete + " deleted successfully.");
                 break;
@@ -122,7 +141,11 @@ public class ModifyNNMenu extends MenuAbstract {
                 invalidChoice();
                 break;
         }
-        String finalMessage = "Modified structure of hidden layers,  numbered from 1 to " + (structureHiddenLayers.length) + ": " + Arrays.toString(structureHiddenLayers);
+        int[] modifiedStructureHiddenlayers = config.getStructure();
+        for (int i = 1; i < config.getStructure().length-1; i++) {
+            modifiedStructureHiddenlayers[i-1] = config.getStructure()[i];
+        }
+        String finalMessage = "Modified structure of hidden layers,  numbered from 1 to " + (modifiedStructureHiddenlayers.length) + ": " + Arrays.toString(structureHiddenLayers);
         actualUI.displayMessage(finalMessage);
         this.runMenu();
     }
@@ -131,9 +154,8 @@ public class ModifyNNMenu extends MenuAbstract {
         NeuralNetworkConfig config = app.getConfig();
         actualUI.displayMessage("Actual number of output neurons: " + config.getStructure()[config.getStructure().length - 1]);
         actualUI.displayMessage("Enter new number of output neurons (>1): ");
-        Scanner scanner = new Scanner(System.in);
-        int outputNeurons = Integer.valueOf(scanner.nextLine());
-        config.setNumberOfInputs(outputNeurons);
+        int outputNeurons = Integer.valueOf(actualUI.getUserInput());
+        config.setNumberOfOutputs(outputNeurons);
         actualUI.displayMessage("Number of output neurons updated successfully to " + outputNeurons + ".");
         this.runMenu();
     }

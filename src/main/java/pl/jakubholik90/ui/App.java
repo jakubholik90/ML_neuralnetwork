@@ -60,10 +60,6 @@ public class App {
         return this.currentConfig;
     }
 
-    private void resetConfig() {
-        this.currentConfig = new NeuralNetworkConfig();
-    }
-
     private void buildNeuralNetwork() {
         if (this.currentConfig==null) {
             actualUI.displayMessage("Neural Network configuration not found, cannot build neural network.");
@@ -74,20 +70,4 @@ public class App {
         nn.step0Build();
         actualUI.displayMessage("Neural Network successfully created.");
     }
-
-    private void displayCurrentConfig() {
-        if (this.currentConfig == null) {
-            actualUI.displayMessage("No Neural Network configuration found.");
-            return;
-        }
-        actualUI.displayMessage("Current Neural Network Configuration:");
-        actualUI.displayMessage("- Structure: " + Arrays.toString(this.currentConfig.getStructure()));
-        actualUI.displayMessage("- Number of iterations: " + this.currentConfig.getNumberOfIterations());
-        actualUI.displayMessage("- Learning rate (eta): " + this.currentConfig.getEta());
-        actualUI.displayMessage("- Activation function - hidden layers: " + this.currentConfig.getHiddenLayerActivationFunction());
-        actualUI.displayMessage("- Activation function - output layer: " + this.currentConfig.getOutputLayerActivationFunction());
-
-    }
-
-
 }
