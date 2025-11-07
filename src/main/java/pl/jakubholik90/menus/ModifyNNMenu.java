@@ -1,6 +1,7 @@
 package pl.jakubholik90.menus;
 
-import pl.jakubholik90.dto.ActivationFunctionsNames;
+import pl.jakubholik90.domains.ActivationFunctions;
+import pl.jakubholik90.dto.ActivationFunctionsEnum;
 import pl.jakubholik90.dto.NeuralNetworkConfig;
 import pl.jakubholik90.ui.App;
 import pl.jakubholik90.ui.UI;
@@ -21,8 +22,8 @@ public class ModifyNNMenu extends MenuAbstract {
         menuTable.addMenuItem(new MenuItem(2,"Inputs", "Define the number of input neurons"));
         menuTable.addMenuItem(new MenuItem(3,"Hidden Layers", "Define the number of hidden layers and neurons in each layer"));
         menuTable.addMenuItem(new MenuItem(4,"Outputs", "Define the number of output neurons"));
-        menuTable.addMenuItem(new MenuItem(5,"Activation Function - Output Layer", "Set activation function for output layer"));
-        menuTable.addMenuItem(new MenuItem(6,"Activation Function - Hidden Layers", "Set activation function for hidden layers"));
+        menuTable.addMenuItem(new MenuItem(5,"Activation Function - Hidden Layers", "Set activation function for hidden layers"));
+        menuTable.addMenuItem(new MenuItem(6,"Activation Function - Output Layer", "Set activation function for output layer"));
         menuTable.addMenuItem(new MenuItem(0,"Back to Main Menu", "Return to the main menu"));
         return menuTable;
     }
@@ -44,11 +45,11 @@ public class ModifyNNMenu extends MenuAbstract {
                 // Handle Outputs
                 handleOutputs();
             case 5:
-                // Handle Activation Function - Output Layer
-                handleActivationFunctionOutputLayer();
-            case 6:
                 // Handle Activation Function - Hidden Layers
                 handleActivationFunctionHiddenLayers();
+            case 6:
+                // Handle Activation Function - Output Layer
+                handleActivationFunctionOutputLayer();
             case 0:
                 // Handle Back to Main Menu
                 mainMenu.runMenu();
@@ -73,8 +74,8 @@ public class ModifyNNMenu extends MenuAbstract {
         actualUI.displayMessage("- Structure: " + Arrays.toString(config.getStructure()));
         actualUI.displayMessage("- Number of iterations: " + config.getNumberOfIterations());
         actualUI.displayMessage("- Learning rate (eta): " + config.getEta());
-        actualUI.displayMessage("- Activation function - hidden layers: " + config.getHiddenLayerActivationFunction());
-        actualUI.displayMessage("- Activation function - output layer: " + config.getOutputLayerActivationFunction());
+        actualUI.displayMessage("- Activation function - hidden layers: " + config.getNameActivationFunction(config.getHiddenLayerActivationFunction()));
+        actualUI.displayMessage("- Activation function - output layer: " + config.getNameActivationFunction(config.getOutputLayerActivationFunction()));
         this.runMenu();
     }
 
@@ -107,6 +108,7 @@ public class ModifyNNMenu extends MenuAbstract {
                 // Insert hidden layer
                 actualUI.displayMessage("Enter position to insert new hidden layer (1 to " + (structureHiddenLayers.length + 1) + "): ");
                 int positionToAdd = Integer.valueOf(actualUI.getUserInput());
+                actualUI.displayMessage("Inserting hidden layer at position: "  + positionToAdd);
                 actualUI.displayMessage("Enter number of neurons for the new hidden layer (>0): ");
                 int neuronsToAdd = Integer.valueOf(actualUI.getUserInput());
                 config.insertHiddenLayer(positionToAdd, neuronsToAdd);
@@ -130,6 +132,7 @@ public class ModifyNNMenu extends MenuAbstract {
                 }
                 actualUI.displayMessage("Enter position of hidden layer to delete (1 to " + (structureHiddenLayers.length) + "): ");
                 int positionToDelete = Integer.valueOf(actualUI.getUserInput());
+                actualUI.displayMessage("Deleting hidden layer at position: "  + positionToDelete);
                 config.deleteHiddenLayer(positionToDelete);
                 actualUI.displayMessage("Hidden layer at position " + positionToDelete + " deleted successfully.");
                 break;
@@ -141,11 +144,11 @@ public class ModifyNNMenu extends MenuAbstract {
                 invalidChoice();
                 break;
         }
-        int[] modifiedStructureHiddenlayers = config.getStructure();
+        int[] modifiedStructureHiddenlayers = new int[config.getStructure().length - 2];
         for (int i = 1; i < config.getStructure().length-1; i++) {
             modifiedStructureHiddenlayers[i-1] = config.getStructure()[i];
         }
-        String finalMessage = "Modified structure of hidden layers,  numbered from 1 to " + (modifiedStructureHiddenlayers.length) + ": " + Arrays.toString(structureHiddenLayers);
+        String finalMessage = "Modified structure of hidden layers numbered from 1 to " + (modifiedStructureHiddenlayers.length) + ": " + Arrays.toString(modifiedStructureHiddenlayers);
         actualUI.displayMessage(finalMessage);
         this.runMenu();
     }
@@ -162,61 +165,61 @@ public class ModifyNNMenu extends MenuAbstract {
 
     private void handleActivationFunctionOutputLayer() {
         NeuralNetworkConfig config = app.getConfig();
-        String menuMessage = "Actual activation function for output layer: " + config.getOutputLayerActivationFunction();
+        String menuMessage = "Actual activation function for output layer: " + config.getNameActivationFunction(config.getOutputLayerActivationFunction());
         MenuTable menuTable = new MenuTable("Set Activation Function - Output Layer Menu", menuMessage);
-        menuTable.addMenuItem(new MenuItem(1, ActivationFunctionsNames.SIGMOID.name(), ""));
-        menuTable.addMenuItem(new MenuItem(2, ActivationFunctionsNames.RELU.name(), ""));
-        menuTable.addMenuItem(new MenuItem(3, ActivationFunctionsNames.LEAKY_RELU.name(), ""));
-        menuTable.addMenuItem(new MenuItem(4, ActivationFunctionsNames.DUMMY.name(), ""));
+        menuTable.addMenuItem(new MenuItem(1, ActivationFunctionsEnum.SIGMOID.name(), ""));
+        menuTable.addMenuItem(new MenuItem(2, ActivationFunctionsEnum.RELU.name(), ""));
+        menuTable.addMenuItem(new MenuItem(3, ActivationFunctionsEnum.LEAKY_RELU.name(), ""));
+        menuTable.addMenuItem(new MenuItem(4, ActivationFunctionsEnum.DUMMY.name(), ""));
         int menuChoice = actualUI.displayMenuAskChoice(menuTable);
         switch (menuChoice) {
             case 1:
-                config.setOutputLayerActivationFunction(ActivationFunctionsNames.SIGMOID.name());
+                config.setOutputLayerActivationFunction(ActivationFunctionsEnum.SIGMOID.name());
                 break;
             case 2:
-                config.setOutputLayerActivationFunction(ActivationFunctionsNames.RELU.name());
+                config.setOutputLayerActivationFunction(ActivationFunctionsEnum.RELU.name());
                 break;
             case 3:
-                config.setOutputLayerActivationFunction(ActivationFunctionsNames.LEAKY_RELU.name());
+                config.setOutputLayerActivationFunction(ActivationFunctionsEnum.LEAKY_RELU.name());
                 break;
             case 4:
-                config.setOutputLayerActivationFunction(ActivationFunctionsNames.DUMMY.name());
+                config.setOutputLayerActivationFunction(ActivationFunctionsEnum.DUMMY.name());
                 break;
             default:
                 invalidChoice();
                 break;
         }
-        actualUI.displayMessage("Activation function for output layer updated successfully to " + config.getOutputLayerActivationFunction().toString() + ".");
+        actualUI.displayMessage("Activation function for output layer updated successfully to " + config.getNameActivationFunction(config.getOutputLayerActivationFunction()) + ".");
         this.runMenu();
     }
 
     private void handleActivationFunctionHiddenLayers() {
         NeuralNetworkConfig config = app.getConfig();
-        String menuMessage = "Actual activation function for hidden layers: " + config.getHiddenLayerActivationFunction();
+        String menuMessage = "Actual activation function for hidden layer: " + config.getNameActivationFunction(config.getHiddenLayerActivationFunction());
         MenuTable menuTable = new MenuTable("Set Activation Function - Hidden Layers Menu", menuMessage);
-        menuTable.addMenuItem(new MenuItem(1, ActivationFunctionsNames.SIGMOID.name(), ""));
-        menuTable.addMenuItem(new MenuItem(2, ActivationFunctionsNames.RELU.name(), ""));
-        menuTable.addMenuItem(new MenuItem(3, ActivationFunctionsNames.LEAKY_RELU.name(), ""));
-        menuTable.addMenuItem(new MenuItem(4, ActivationFunctionsNames.DUMMY.name(), ""));
+        menuTable.addMenuItem(new MenuItem(1, ActivationFunctionsEnum.SIGMOID.name(), ""));
+        menuTable.addMenuItem(new MenuItem(2, ActivationFunctionsEnum.RELU.name(), ""));
+        menuTable.addMenuItem(new MenuItem(3, ActivationFunctionsEnum.LEAKY_RELU.name(), ""));
+        menuTable.addMenuItem(new MenuItem(4, ActivationFunctionsEnum.DUMMY.name(), ""));
         int menuChoice = actualUI.displayMenuAskChoice(menuTable);
         switch (menuChoice) {
             case 1:
-                config.setHiddenLayerActivationFunction(ActivationFunctionsNames.SIGMOID.name());
+                config.setHiddenLayerActivationFunction(ActivationFunctionsEnum.SIGMOID.name());
                 break;
             case 2:
-                config.setHiddenLayerActivationFunction(ActivationFunctionsNames.RELU.name());
+                config.setHiddenLayerActivationFunction(ActivationFunctionsEnum.RELU.name());
                 break;
             case 3:
-                config.setHiddenLayerActivationFunction(ActivationFunctionsNames.LEAKY_RELU.name());
+                config.setHiddenLayerActivationFunction(ActivationFunctionsEnum.LEAKY_RELU.name());
                 break;
             case 4:
-                config.setHiddenLayerActivationFunction(ActivationFunctionsNames.DUMMY.name());
+                config.setHiddenLayerActivationFunction(ActivationFunctionsEnum.DUMMY.name());
                 break;
             default:
                 invalidChoice();
                 break;
         }
-        actualUI.displayMessage("Activation function for hidden layers updated successfully to " + config.getHiddenLayerActivationFunction().toString() + ".");
+        actualUI.displayMessage("Activation function for hidden layers updated successfully to " + config.getNameActivationFunction(config.getHiddenLayerActivationFunction()) + ".");
         this.runMenu();
     }
 

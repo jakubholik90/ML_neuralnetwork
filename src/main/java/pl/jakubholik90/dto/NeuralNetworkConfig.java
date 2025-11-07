@@ -17,8 +17,8 @@ public class NeuralNetworkConfig {
         this.structure = new int[] {3,4,1};
         this.numberOfIterations = 100;
         this.eta = 0.01;
-        this.outputLayerActivationFunction = ActivationFunctions::sigmoid;
-        this.hiddenLayerActivationFunction = ActivationFunctions::leakyRelu;
+        this.outputLayerActivationFunction = ActivationFunctionsEnum.SIGMOID.function;
+        this.hiddenLayerActivationFunction = ActivationFunctionsEnum.LEAKY_RELU.function;
     }
 
     public void setNumberOfInputs(int numberOfInputs) {
@@ -29,14 +29,20 @@ public class NeuralNetworkConfig {
     }
 
     public void insertHiddenLayer(int position, int numberOfNeurons) {
-        checkHiddenLayerPosition(position);
+        if (position < 1) {
+            throw new IllegalArgumentException("Invalid position for hidden layer (too low)");
+        } else if (position > this.structure.length-1) {
+            throw new IllegalArgumentException("Invalid position for hidden layer (too high)");
+        }
         int[] newStructure = new int[structure.length + 1];
-        for (int i = 0, j = 0; i < newStructure.length; i++) {
-            if (i == position) {
-                newStructure[i] = numberOfNeurons;
+        int oldNummeration = 0;
+
+        for (int newNummeration = 0; newNummeration < newStructure.length; newNummeration++) {
+            if (newNummeration == position) {
+                newStructure[newNummeration] = numberOfNeurons;
             } else {
-                newStructure[i] = structure[j];
-                j++;
+                newStructure[newNummeration] = structure[oldNummeration];
+                oldNummeration++;
             }
         }
         this.structure = newStructure;
@@ -63,7 +69,7 @@ public class NeuralNetworkConfig {
         // position is 1-based index for hidden layers
         if (position < 1) {
             throw new IllegalArgumentException("Invalid position for hidden layer (too low)");
-        } else if (position > this.structure.length - 1) {
+        } else if (position > this.structure.length - 2) {
             throw new IllegalArgumentException("Invalid position for hidden layer (too high)");
         }
     }
@@ -79,16 +85,16 @@ public class NeuralNetworkConfig {
 
     private ActivationFunctionInterface setLayerActivationFunction(String activationFunction) {
         if (checkActivationFunctionExists(activationFunction)) {
-            ActivationFunctionsNames activationFunctionName = ActivationFunctionsNames.valueOf(activationFunction);
+            ActivationFunctionsEnum activationFunctionName = ActivationFunctionsEnum.valueOf(activationFunction);
             switch (activationFunctionName) {
                 case SIGMOID:
-                    return ActivationFunctions::sigmoid;
+                    return ActivationFunctionsEnum.SIGMOID.function;
                 case RELU:
-                    return ActivationFunctions::relu;
+                    return ActivationFunctionsEnum.RELU.function;
                 case LEAKY_RELU:
-                    return ActivationFunctions::leakyRelu;
+                    return ActivationFunctionsEnum.LEAKY_RELU.function;
                 case DUMMY:
-                    return ActivationFunctions::leakyRelu;
+                    return ActivationFunctionsEnum.DUMMY.function;
                 default:
                     return ActivationFunctions::dummy;
             }
@@ -107,7 +113,7 @@ public class NeuralNetworkConfig {
     }
 
     private boolean checkActivationFunctionExists(String functionName) {
-        for (ActivationFunctionsNames afn : ActivationFunctionsNames.values()) {
+        for (ActivationFunctionsEnum afn : ActivationFunctionsEnum.values()) {
             if (afn.toString().equals(functionName)) {
                 return true;
             }
@@ -135,5 +141,20 @@ public class NeuralNetworkConfig {
 
     public ActivationFunctionInterface getHiddenLayerActivationFunction() {
         return hiddenLayerActivationFunction;
+    }
+
+    public String getNameActivationFunction(ActivationFunctionInterface activationFunction) {
+        if (activationFunction == ActivationFunctionsEnum.DUMMY.function) {
+            return ActivationFunctionsEnum.DUMMY.name();
+        } else if (activationFunction == ActivationFunctionsEnum.SIGMOID.function) {
+            return ActivationFunctionsEnum.SIGMOID.name();
+        } else if (activationFunction == ActivationFunctionsEnum.RELU.function) {
+            return ActivationFunctionsEnum.RELU.name();
+        } else if (activationFunction == ActivationFunctionsEnum.LEAKY_RELU.function) {
+            return ActivationFunctionsEnum.LEAKY_RELU.name();
+        } else {
+            return "UNKNOWN_ACTIVATION_FUNCTION";
+        } // to avoid warning about unused parameter
+
     }
 }
