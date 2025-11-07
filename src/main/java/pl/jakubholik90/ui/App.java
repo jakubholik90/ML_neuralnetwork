@@ -16,6 +16,7 @@ public class App {
     // neural network and its config
     private NeuralNetworkConfig currentConfig;
     private NeuralNetworkController controller;
+    private NeuralNetwork currentNeuralNetwork;
 
 
     public App(UI actualUI) {
@@ -53,14 +54,13 @@ public class App {
         return this.currentConfig;
     }
 
-    private void buildNeuralNetwork() {
-        if (this.currentConfig==null) {
-            actualUI.displayMessage("Neural Network configuration not found, cannot build neural network.");
-            return;
-        }
+    public NeuralNetwork getNeuralNetwork() {
+        return this.currentNeuralNetwork;
+    }
 
-        NeuralNetwork nn = controller.createNeuralNetworkFromConfig(this.currentConfig);
-        nn.step0Build();
-        actualUI.displayMessage("Neural Network successfully created.");
+    public void buildNeuralNetwork() {
+        this.currentNeuralNetwork = controller.createNeuralNetworkFromConfig(this.currentConfig);
+        this.currentNeuralNetwork.step0Build();
+        actualUI.displayMessage("Neural Network successfully built.");
     }
 }

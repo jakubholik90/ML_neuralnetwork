@@ -18,13 +18,15 @@ public class ModifyNNMenu extends MenuAbstract {
     @Override
     public MenuTable create() {
         MenuTable menuTable = new MenuTable("Modify Neural Network Menu","");
-        menuTable.addMenuItem(new MenuItem(1,"Display Current Neural Network", "Display the structure and parameters of the current neural network"));
+        menuTable.addMenuItem(new MenuItem(1,"Display Settings", "Display the structure and parameters of the current neural network"));
         menuTable.addMenuItem(new MenuItem(2,"Inputs", "Define the number of input neurons"));
         menuTable.addMenuItem(new MenuItem(3,"Hidden Layers", "Define the number of hidden layers and neurons in each layer"));
         menuTable.addMenuItem(new MenuItem(4,"Outputs", "Define the number of output neurons"));
         menuTable.addMenuItem(new MenuItem(5,"Activation Function - Hidden Layers", "Set activation function for hidden layers"));
         menuTable.addMenuItem(new MenuItem(6,"Activation Function - Output Layer", "Set activation function for output layer"));
-        menuTable.addMenuItem(new MenuItem(0,"Back to Main Menu", "Return to the main menu"));
+        menuTable.addMenuItem(new MenuItem(7,"Eta", "Define the learning rate (eta) for training the neural network"));
+        menuTable.addMenuItem(new MenuItem(8,"Iterations", "Define the number of training iterations for the neural network"));
+        menuTable.addMenuItem(new MenuItem(0,"Update and Back", "Update neural network with current config. and return to the main menu"));
         return menuTable;
     }
 
@@ -50,8 +52,15 @@ public class ModifyNNMenu extends MenuAbstract {
             case 6:
                 // Handle Activation Function - Output Layer
                 handleActivationFunctionOutputLayer();
+            case 7:
+                // Handle Eta
+                handleEta();
+            case 8:
+                // Handle Iterations
+                handleIterations();
             case 0:
                 // Handle Back to Main Menu
+                app.buildNeuralNetwork();
                 mainMenu.runMenu();
             default:
                 // Handle invalid choice
@@ -220,6 +229,26 @@ public class ModifyNNMenu extends MenuAbstract {
                 break;
         }
         actualUI.displayMessage("Activation function for hidden layers updated successfully to " + config.getNameActivationFunction(config.getHiddenLayerActivationFunction()) + ".");
+        this.runMenu();
+    }
+
+    private void handleEta() {
+        NeuralNetworkConfig config = app.getConfig();
+        actualUI.displayMessage("Actual learning rate (eta): " + config.getEta());
+        actualUI.displayMessage("Enter new learnning rate (eta) (0.0 < eta <= 1.0):");
+        double eta = Double.valueOf(actualUI.getUserInput());
+        config.setEta(eta);
+        actualUI.displayMessage("Learning rate updated successfully to " + eta + ".");
+        this.runMenu();
+    }
+
+    private void handleIterations() {
+        NeuralNetworkConfig config = app.getConfig();
+        actualUI.displayMessage("Actual number of iterations: " + config.getNumberOfIterations());
+        actualUI.displayMessage("Enter new number of iterations > 0:");
+        int iterations = Integer.valueOf(actualUI.getUserInput());
+        config.setNumberOfIterations(iterations);
+        actualUI.displayMessage("Number of iterations updated successfully to " + iterations + ".");
         this.runMenu();
     }
 

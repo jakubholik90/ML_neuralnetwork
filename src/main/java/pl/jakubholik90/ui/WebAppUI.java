@@ -11,7 +11,7 @@ public class WebAppUI implements UI{
     }
 
     @Override
-    public void displayNeuralNetwork(NeuralNetwork neuralNetwork, Double[] inputData, boolean showEmpty) {
+    public void displayNeuralNetwork(NeuralNetwork neuralNetwork, boolean showEmpty) {
         //PLACEHOLDER - to be implemented in future
     }
 

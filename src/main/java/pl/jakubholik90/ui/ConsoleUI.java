@@ -40,7 +40,7 @@ public class ConsoleUI implements UI{
     }
 
     @Override
-    public void displayNeuralNetwork(NeuralNetwork neuralNetwork, Double[] inputData, boolean showEmpty) {
+    public void displayNeuralNetwork(NeuralNetwork neuralNetwork, boolean showEmpty) {
         int[] structure = neuralNetwork.getStructure();
         List<Double[]> activationsMatrix = neuralNetwork.getActivationMatrix();
         List<String[]> activationsToShow = new ArrayList<>();

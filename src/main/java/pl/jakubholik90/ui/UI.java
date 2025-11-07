@@ -7,7 +7,7 @@ public interface UI {
 
     public void clearScreen();
 
-    public void displayNeuralNetwork(NeuralNetwork neuralNetwork, Double[] inputData, boolean showEmpty);
+    public void displayNeuralNetwork(NeuralNetwork neuralNetwork, boolean showEmpty);
 
     public void displayMessage(String message);
 

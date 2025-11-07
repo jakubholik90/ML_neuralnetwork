@@ -15,10 +15,11 @@ public class MainMenu extends MenuAbstract {
     @Override
     public MenuTable create() {
         MenuTable menuTable = new MenuTable("Main Menu","");
-        menuTable.addMenuItem(new MenuItem(1,"Modify Neural Network", "Modify neural network settings"));
+        menuTable.addMenuItem(new MenuItem(1,"Modify Neural Network", "Modify / display neural network settings"));
         menuTable.addMenuItem(new MenuItem(2,"Save/Load Neural Network", "Save actual or load an existing neural network from file"));
-        menuTable.addMenuItem(new MenuItem(3,"Train Neural Network", "Train the neural network with training data"));
-        menuTable.addMenuItem(new MenuItem(4,"Run prediction", "Run a prediction with custom input"));
+        menuTable.addMenuItem(new MenuItem(3,"Visualise Neural Network", "Visualise the structure of the neural network"));
+        menuTable.addMenuItem(new MenuItem(4,"Train Neural Network", "Train the neural network with training data"));
+        menuTable.addMenuItem(new MenuItem(5,"Run prediction", "Run a prediction with custom input"));
         menuTable.addMenuItem(new MenuItem(0,"Exit app", ""));
         return menuTable;
     }
@@ -33,13 +34,17 @@ public class MainMenu extends MenuAbstract {
                 // Handle Save/Load Neural Network
                 break;
             case 3:
+                handleVisualise();
+            case 4:
                 // Handle Train Neural Network
                 break;
-            case 4:
+            case 5:
                 // Handle Run prediction
                 break;
             case 0:
                 // Handle Exit
+                actualUI.displayMessage("Thank you for using the Neural Network Application. Goodbye!");
+                System.exit(0);
                 break;
             default:
                 // Handle invalid choice
@@ -51,6 +56,11 @@ public class MainMenu extends MenuAbstract {
 
     public void setModifyNNMenu(ModifyNNMenu modifyNNMenu) {
         this.modifyNNMenu = modifyNNMenu;
+    }
+
+    private void handleVisualise() {
+        actualUI.displayNeuralNetwork(app.getNeuralNetwork(),true);
+        this.runMenu();
     }
 
 }
