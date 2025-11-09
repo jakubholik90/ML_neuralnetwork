@@ -6,6 +6,7 @@ import pl.jakubholik90.ui.UI;
 public class MainMenu extends MenuAbstract {
 
     private ModifyNNMenu modifyNNMenu;
+    private TrainNNMenu trainNNMenu;
 
 
     public MainMenu(UI actualUI, App app) {
@@ -30,6 +31,7 @@ public class MainMenu extends MenuAbstract {
             case 1:
                 // Handle Modify Neural Network
                 modifyNNMenu.runMenu();
+                break;
             case 2:
                 // Handle Save/Load Neural Network
                 break;
@@ -37,6 +39,7 @@ public class MainMenu extends MenuAbstract {
                 handleVisualise();
             case 4:
                 // Handle Train Neural Network
+                trainNNMenu.runMenu();
                 break;
             case 5:
                 // Handle Run prediction
@@ -56,6 +59,10 @@ public class MainMenu extends MenuAbstract {
 
     public void setModifyNNMenu(ModifyNNMenu modifyNNMenu) {
         this.modifyNNMenu = modifyNNMenu;
+    }
+
+    public void setTrainNNMenu(TrainNNMenu trainNNMenu) {
+        this.trainNNMenu = trainNNMenu;
     }
 
     private void handleVisualise() {

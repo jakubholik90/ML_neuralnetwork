@@ -5,12 +5,14 @@ import pl.jakubholik90.domains.NeuralNetwork;
 import pl.jakubholik90.dto.NeuralNetworkConfig;
 import pl.jakubholik90.menus.MainMenu;
 import pl.jakubholik90.menus.ModifyNNMenu;
+import pl.jakubholik90.menus.TrainNNMenu;
 
 public class App {
     // internal objects
     // menus
     private MainMenu mainMenu;
     private ModifyNNMenu modifyNNMenu;
+    private TrainNNMenu trainNNMenu;
     // ui
     private UI actualUI;
     // neural network and its config
@@ -36,14 +38,23 @@ public class App {
         // create new menus
         this.mainMenu = new MainMenu(actualUI,this);
         this.modifyNNMenu = new ModifyNNMenu(actualUI,this);
+        this.trainNNMenu = new TrainNNMenu(actualUI,this);
 
 
         // inject dependencies between menus
         //"main" menu connections
         this.mainMenu.setModifyNNMenu(this.modifyNNMenu); // from MainMenu to NewModifyMenu
+        this.mainMenu.setTrainNNMenu(this.trainNNMenu); // from MainMenu to TrainNNMenu
 
         // "new/modify" menu connections
         this.modifyNNMenu.setMainMenu(this.mainMenu); // from NewModifyMenu to MainMenu
+
+        // "train" menu connections
+        this.trainNNMenu.setMainMenu(this.mainMenu); // from NewModifyMenu to MainMenu
+
+
+
+
 
     }
 
