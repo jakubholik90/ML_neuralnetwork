@@ -9,6 +9,8 @@ import pl.jakubholik90.ui.ConsoleUI;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class JhTests
 {
@@ -62,17 +64,33 @@ public class JhTests
             // testList4.add(fff);
             // System.out.println("fff:");
             // Utils.displayArrayMatrix2(testList4);
+
             ConsoleUI testUI = new ConsoleUI();
+            Double[] doubles = {1.0, 2.0, 3.0};
+            String string = Arrays.toString(doubles);
+
             DatabaseService databaseService = new DatabaseService(testUI, new App(testUI));
-            String testSet = "INSERT INTO training_data ('set_name','input_array','output_array') VALUES ('test_data', '[[1.0,2.0,3.0],[4.0,5.0,6.0]]', '[[0.0,1.0]]')";
-            databaseService.setData(testSet);
-            String testGet = "SELECT * FROM training_data";
-            ArrayList<DatabaseRecord> data = databaseService.getData(testGet);
+
+            Double[] doubles1 = databaseService.parseStringToDoubleArray(string);
+
+
+            DatabaseRecord testDbRecord = new DatabaseRecord(
+                    "newSet",
+                    new Double[] {1.0,2.0,3.0},
+                    new Double[] {0.0,1.0});
+            DatabaseRecord testDbRecord2 = new DatabaseRecord(
+                    "newSet",
+                    new Double[] {1.0,2.5,3.0},
+                    new Double[] {0.0,1.0});
+            DatabaseRecord testDbRecord3 = new DatabaseRecord(
+                    "newSet2",
+                    new Double[] {1.5,2.0,3.0},
+                    new Double[] {0.0,1.0});
+            databaseService.insertDataRecord(testDbRecord);
+            databaseService.insertDataRecord(testDbRecord2);
+            databaseService.insertDataRecord(testDbRecord3);
+            HashMap<Integer, DatabaseRecord> data = databaseService.getData();
             databaseService.previewData(data);
-
-
-
-
         }
 
         public static Double[][] slice2DArray(Double[][] inputArray, int rowStart, int rowEnd, int colStart, int colEnd) {
