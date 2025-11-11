@@ -3,7 +3,6 @@ package pl.jakubholik90.database;
 import pl.jakubholik90.ui.App;
 import pl.jakubholik90.ui.UI;
 
-import java.awt.*;
 import java.sql.*;
 import java.util.*;
 
@@ -38,7 +37,7 @@ public class DatabaseService {
         }
     }
 
-    public void insertDataRecord(DatabaseRecord dbRecord) throws SQLException {
+    public void insertDataRecord(DataRecord dbRecord) throws SQLException {
         try (Connection connection = setConnection()) {
             String query ="INSERT OR IGNORE INTO training_data ('set_name','input_array','output_array') VALUES (?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -51,9 +50,9 @@ public class DatabaseService {
         }
     }
 
-    public HashMap<Integer,DatabaseRecord> getAllData() throws SQLException {
+    public HashMap<Integer, DataRecord> getAllDataRecords() throws SQLException {
         String query = "SELECT * FROM training_data";
-        HashMap<Integer, DatabaseRecord> dbRecordMap = new HashMap<>();
+        HashMap<Integer, DataRecord> dbRecordMap = new HashMap<>();
         try (Connection connection = setConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet= statement.executeQuery(query)){
@@ -64,42 +63,60 @@ public class DatabaseService {
                 String outputArrayString = resultSet.getString("output_array");
                 Double[] inputArray = parseStringToDoubleArray(inputArrayString);
                 Double[] outputArray = parseStringToDoubleArray(outputArrayString);
-                DatabaseRecord dbRecord = new DatabaseRecord(setName,inputArray, outputArray);
+                DataRecord dbRecord = new DataRecord(setName,inputArray, outputArray);
                 dbRecordMap.put(id,dbRecord);
             }
         }
         return dbRecordMap;
     }
 
-    public HashMap<Integer,DatabaseRecord> getAllDataSets() throws SQLException {
+    public HashMap<Integer, DataSet> getAllDataSets() throws SQLException {
         String query = "SELECT * FROM training_data";
         Set<String> dbSetNames = new HashSet<>();
         // method to be finished
-        HashMap<Integer, DatabaseRecord> dbRecordMap = new HashMap<>();
+        HashMap<Integer, DataSet> dbRecordMap = new HashMap<>();
         try (Connection connection = setConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet= statement.executeQuery(query)){
+             ResultSet resultSet= statement.executeQuery(query)) {
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
                 String setName = resultSet.getString("set_name");
-                String inputArrayString = resultSet.getString("input_array");
-                String outputArrayString = resultSet.getString("output_array");
-                Double[] inputArray = parseStringToDoubleArray(inputArrayString);
-                Double[] outputArray = parseStringToDoubleArray(outputArrayString);
-                DatabaseRecord dbRecord = new DatabaseRecord(setName,inputArray, outputArray);
-                dbRecordMap.put(id,dbRecord);
+                boolean setAlreadyInMap = dbRecordMap.values()
+                        .stream()
+                        .map(x -> x.getName())
+                        .toList()
+                        .contains(setName);
+                if (setAlreadyInMap) {
+                    DataSet setWithName = dbRecordMap.values()
+                            .stream()
+                            .filter(x -> x.getName().equals(setName))
+                            .findFirst()
+                            .get();
+
+                    Integer actualSize = setWithName.getSize();
+                    setWithName.setSize(actualSize + 1);
+                } else {
+                    DataSet newSet = new DataSet(setName, 1);
+                    int mapSize = dbRecordMap.size();
+                    dbRecordMap.put(mapSize + 1, newSet);
+                }
             }
         }
         return dbRecordMap;
     }
 
-
-
-    public void previewData(HashMap<Integer, DatabaseRecord> dbRecordMap) {
+    public void previewDataRecords(HashMap<Integer, DataRecord> dbRecordMap) {
         Set<Integer> dbRecordIds = dbRecordMap.keySet();
         for (int dbRecordId : dbRecordIds) {
-            DatabaseRecord dbRecord = dbRecordMap.get(dbRecordId);
+            DataRecord dbRecord = dbRecordMap.get(dbRecordId);
             actualUI.displayMessage("id: " + dbRecordId + ", set: " + dbRecord.setName() + ", input: " + Arrays.toString(dbRecord.inputData()) + ", output: " + Arrays.toString(dbRecord.outputData()));
+        }
+    }
+
+    public void previewDataSets(HashMap<Integer, DataSet> dbRecordMap) {
+        Set<Integer> dbSetIds = dbRecordMap.keySet();
+        for (int dbSetId : dbSetIds) {
+            DataSet dbSet = dbRecordMap.get(dbSetId);
+            actualUI.displayMessage("id: " + dbSetId + ", set: " + dbSet.getName() + ", size: " + dbSet.getSize());
         }
     }
 

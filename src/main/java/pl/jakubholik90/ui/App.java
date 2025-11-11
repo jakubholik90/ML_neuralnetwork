@@ -4,8 +4,11 @@ import pl.jakubholik90.controllers.NeuralNetworkController;
 import pl.jakubholik90.domains.NeuralNetwork;
 import pl.jakubholik90.dto.NeuralNetworkConfig;
 import pl.jakubholik90.menus.MainMenu;
+import pl.jakubholik90.menus.ManageDBMenu;
 import pl.jakubholik90.menus.ModifyNNMenu;
 import pl.jakubholik90.menus.TrainNNMenu;
+
+import java.sql.SQLException;
 
 public class App {
     // internal objects
@@ -13,6 +16,7 @@ public class App {
     private MainMenu mainMenu;
     private ModifyNNMenu modifyNNMenu;
     private TrainNNMenu trainNNMenu;
+    private ManageDBMenu manageDBMenu;
     // ui
     private UI actualUI;
     // neural network and its config
@@ -21,7 +25,7 @@ public class App {
     private NeuralNetwork currentNeuralNetwork;
 
 
-    public App(UI actualUI) {
+    public App(UI actualUI) throws SQLException {
         this.actualUI = actualUI;
         this.currentConfig = new NeuralNetworkConfig();
         this.controller = new NeuralNetworkController();
@@ -34,17 +38,19 @@ public class App {
         this.mainMenu.runMenu();
     }
 
-    private void initializeMenus() {
+    private void initializeMenus() throws SQLException {
         // create new menus
         this.mainMenu = new MainMenu(actualUI,this);
         this.modifyNNMenu = new ModifyNNMenu(actualUI,this);
         this.trainNNMenu = new TrainNNMenu(actualUI,this);
+        this.manageDBMenu = new ManageDBMenu(actualUI,this);
 
 
         // inject dependencies between menus
         //"main" menu connections
         this.mainMenu.setModifyNNMenu(this.modifyNNMenu); // from MainMenu to NewModifyMenu
         this.mainMenu.setTrainNNMenu(this.trainNNMenu); // from MainMenu to TrainNNMenu
+        this.mainMenu.setManageDBMenu(this.manageDBMenu); // from MainMenu to ManageDBMenu
 
         // "new/modify" menu connections
         this.modifyNNMenu.setMainMenu(this.mainMenu); // from NewModifyMenu to MainMenu
@@ -52,7 +58,8 @@ public class App {
         // "train" menu connections
         this.trainNNMenu.setMainMenu(this.mainMenu); // from NewModifyMenu to MainMenu
 
-
+        // "manage db" menu connections
+        this.manageDBMenu.setMainMenu(this.mainMenu); // from ManageDBMenu to MainMenu
 
 
 

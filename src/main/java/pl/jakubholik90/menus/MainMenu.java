@@ -7,6 +7,7 @@ public class MainMenu extends MenuAbstract {
 
     private ModifyNNMenu modifyNNMenu;
     private TrainNNMenu trainNNMenu;
+    private ManageDBMenu manageDBMenu;
 
 
     public MainMenu(UI actualUI, App app) {
@@ -17,10 +18,11 @@ public class MainMenu extends MenuAbstract {
     public MenuTable create() {
         MenuTable menuTable = new MenuTable("Main Menu","");
         menuTable.addMenuItem(new MenuItem(1,"Modify Neural Network", "Modify / display neural network settings"));
-        menuTable.addMenuItem(new MenuItem(2,"Save/Load Neural Network", "Save actual or load an existing neural network from file"));
+        menuTable.addMenuItem(new MenuItem(2,"Manage Training Data", "Manage training data from database"));
         menuTable.addMenuItem(new MenuItem(3,"Visualise Neural Network", "Visualise the structure of the neural network"));
         menuTable.addMenuItem(new MenuItem(4,"Train Neural Network", "Train the neural network with training data"));
         menuTable.addMenuItem(new MenuItem(5,"Run prediction", "Run a prediction with custom input"));
+        menuTable.addMenuItem(new MenuItem(6,"Save/Load Neural network", "Save actual or load neural network from file"));
         menuTable.addMenuItem(new MenuItem(0,"Exit app", ""));
         return menuTable;
     }
@@ -33,8 +35,8 @@ public class MainMenu extends MenuAbstract {
                 modifyNNMenu.runMenu();
                 break;
             case 2:
-                // Handle Save/Load Neural Network
-                break;
+                // Handle Manage Training Data
+                manageDBMenu.runMenu();
             case 3:
                 handleVisualise();
             case 4:
@@ -43,6 +45,9 @@ public class MainMenu extends MenuAbstract {
                 break;
             case 5:
                 // Handle Run prediction
+                break;
+            case 6:
+                // Handle Save/Load Neural Network
                 break;
             case 0:
                 // Handle Exit
@@ -63,6 +68,10 @@ public class MainMenu extends MenuAbstract {
 
     public void setTrainNNMenu(TrainNNMenu trainNNMenu) {
         this.trainNNMenu = trainNNMenu;
+    }
+
+    public void setManageDBMenu(ManageDBMenu manageDBMenu) {
+        this.manageDBMenu = manageDBMenu;
     }
 
     private void handleVisualise() {

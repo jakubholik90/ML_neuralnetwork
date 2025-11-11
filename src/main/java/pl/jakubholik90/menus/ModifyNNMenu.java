@@ -36,7 +36,6 @@ public class ModifyNNMenu extends MenuAbstract {
             case 1:
                 // Handle Display Current Neural Network
                 handleDisplay();
-                break;
             case 2:
                 // Handle Inputs
                 handleInputs();
