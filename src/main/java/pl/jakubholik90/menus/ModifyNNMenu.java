@@ -36,31 +36,40 @@ public class ModifyNNMenu extends MenuAbstract {
             case 1:
                 // Handle Display Current Neural Network
                 handleDisplay();
+                break;
             case 2:
                 // Handle Inputs
                 handleInputs();
+                break;
             case 3:
                 // Handle Hidden Layers
                 handleHiddenLayers();
+                break;
             case 4:
                 // Handle Outputs
                 handleOutputs();
+                break;
             case 5:
                 // Handle Activation Function - Hidden Layers
                 handleActivationFunctionHiddenLayers();
+                break;
             case 6:
                 // Handle Activation Function - Output Layer
                 handleActivationFunctionOutputLayer();
+                break;
             case 7:
                 // Handle Eta
                 handleEta();
+                break;
             case 8:
                 // Handle Iterations
                 handleIterations();
+                break;
             case 0:
                 // Handle Back to Main Menu
                 app.buildNeuralNetwork();
                 mainMenu.runMenu();
+                break;
             default:
                 // Handle invalid choice
                 invalidChoice();

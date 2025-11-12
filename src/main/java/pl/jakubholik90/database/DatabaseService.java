@@ -50,6 +50,29 @@ public class DatabaseService {
         }
     }
 
+    public void updateDataRecord(int recordId, DataRecord updatedRecord) throws SQLException {
+        try (Connection connection = setConnection()) {
+            String query = "UPDATE training_data SET set_name = ?, input_array = ?, output_array = ? WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, updatedRecord.setName());
+            preparedStatement.setString(2, Arrays.toString(updatedRecord.inputData()));
+            preparedStatement.setString(3, Arrays.toString(updatedRecord.outputData()));
+            preparedStatement.setInt(4, recordId);
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public void deleteDataRecord(int recordId) throws SQLException {
+        try (Connection connection = setConnection()) {
+            String query = "DELETE FROM training_data WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, recordId);
+            preparedStatement.executeUpdate();
+        }
+    }
+
     public HashMap<Integer, DataRecord> getAllDataRecords() throws SQLException {
         String query = "SELECT * FROM training_data";
         HashMap<Integer, DataRecord> dbRecordMap = new HashMap<>();
@@ -68,6 +91,24 @@ public class DatabaseService {
             }
         }
         return dbRecordMap;
+    }
+
+    public DataRecord getDataRecordById(int recordId) throws SQLException {
+        HashMap<Integer, DataRecord> allDataRecords = getAllDataRecords();
+        DataRecord returnRecord = allDataRecords.get(recordId);
+        return returnRecord;
+    }
+
+    public DataSet getDataSetByName(String setName) throws SQLException {
+        HashMap<Integer, DataSet> allDataSets = getAllDataSets();
+        DataSet returnDataSet = allDataSets.values()
+                .stream()
+                .filter(x -> x.getName().equals(setName))
+                .findFirst()
+                .get();
+        return returnDataSet;
+
+
     }
 
     public HashMap<Integer, DataSet> getAllDataSets() throws SQLException {
@@ -112,11 +153,70 @@ public class DatabaseService {
         }
     }
 
+    public void previewSingleDataRecord(DataRecord dbRecord) {
+        actualUI.displayMessage("set: " + dbRecord.setName() + ", input: " + Arrays.toString(dbRecord.inputData()) + ", output: " + Arrays.toString(dbRecord.outputData()));
+    }
+
     public void previewDataSets(HashMap<Integer, DataSet> dbRecordMap) {
         Set<Integer> dbSetIds = dbRecordMap.keySet();
         for (int dbSetId : dbSetIds) {
             DataSet dbSet = dbRecordMap.get(dbSetId);
             actualUI.displayMessage("id: " + dbSetId + ", set: " + dbSet.getName() + ", size: " + dbSet.getSize());
+        }
+    }
+
+    public void previewSingleDataSet(DataSet dbSet) {
+            actualUI.displayMessage("set: " + dbSet.getName() + ", size: " + dbSet.getSize());
+    }
+
+    public void previewDataSetNames() throws SQLException {
+        StringBuilder stringBuilder = new StringBuilder();
+        Set<String> allDataSetNames = getAllDataSetNames();
+        String string = allDataSetNames.stream()
+                .toList()
+                .toString();
+        actualUI.displayMessage("Data sets in database: " + string);
+    }
+
+
+    public Set<String> getAllDataSetNames() throws SQLException {
+        HashMap<Integer, DataSet> allDataSets = getAllDataSets();
+        Set<String> dataSetNames = new HashSet<>();
+        for (DataSet dataSet : allDataSets.values()) {
+            dataSetNames.add(dataSet.getName());
+        }
+        return dataSetNames;
+    }
+
+    public void renameDataSet(DataSet currentDataSet, String newSetName) throws SQLException {
+        try (Connection connection = setConnection()) {
+            String query = "UPDATE training_data SET set_name = ? WHERE set_name = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, newSetName);
+            preparedStatement.setString(2, currentDataSet.getName());
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public void copyDataSet(DataSet currentDataSet, String newSetName) throws SQLException {
+        try (Connection connection = setConnection()) {
+            String query = "INSERT INTO training_data (set_name, input_array, output_array) SELECT ?, input_array, output_array FROM training_data WHERE set_name = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, newSetName);
+            preparedStatement.setString(2, currentDataSet.getName());
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public void deleteDataSetByName(String dataSetName) throws SQLException {
+        try (Connection connection = setConnection()) {
+            String query = "DELETE FROM training_data WHERE set_name = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, dataSetName);
+            preparedStatement.executeUpdate();
         }
     }
 

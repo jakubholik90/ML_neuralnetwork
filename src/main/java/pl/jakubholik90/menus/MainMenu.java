@@ -37,8 +37,10 @@ public class MainMenu extends MenuAbstract {
             case 2:
                 // Handle Manage Training Data
                 manageDBMenu.runMenu();
+                break;
             case 3:
                 handleVisualise();
+                break;
             case 4:
                 // Handle Train Neural Network
                 trainNNMenu.runMenu();
