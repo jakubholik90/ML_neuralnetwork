@@ -34,6 +34,7 @@ public class TrainNNMenu extends MenuAbstract {
         menuTable.addMenuItem(new MenuItem(5,"Save", "Save the structure and parameters of neural network to file"));
         menuTable.addMenuItem(new MenuItem(6,"Start Training", "Start training with actual set of training data"));
         menuTable.addMenuItem(new MenuItem(7,"View actual structure", "Visualise the structure (activations) of neural network"));
+        menuTable.addMenuItem(new MenuItem(8,"Show training plot", "Showing plot of error convergence during training"));
         menuTable.addMenuItem(new MenuItem(0,"Back to Main menu", ""));
         return menuTable;
     }
@@ -66,6 +67,9 @@ public class TrainNNMenu extends MenuAbstract {
             case 7:
                 // Handle View actual structure
                 handleViewActualStructure();
+                break;
+            case 8:
+                // Handle Show training plot
                 break;
             case 0:
                 // Handle Back to Main menu

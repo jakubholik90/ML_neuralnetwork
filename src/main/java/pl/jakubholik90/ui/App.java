@@ -3,10 +3,7 @@ package pl.jakubholik90.ui;
 import pl.jakubholik90.controllers.NeuralNetworkController;
 import pl.jakubholik90.domains.NeuralNetwork;
 import pl.jakubholik90.dto.NeuralNetworkConfig;
-import pl.jakubholik90.menus.MainMenu;
-import pl.jakubholik90.menus.ManageDBMenu;
-import pl.jakubholik90.menus.ModifyNNMenu;
-import pl.jakubholik90.menus.TrainNNMenu;
+import pl.jakubholik90.menus.*;
 
 import java.sql.SQLException;
 
@@ -17,6 +14,7 @@ public class App {
     private ModifyNNMenu modifyNNMenu;
     private TrainNNMenu trainNNMenu;
     private ManageDBMenu manageDBMenu;
+    private PredictionMenu predictionMenu;
     // ui
     private UI actualUI;
     // neural network and its config
@@ -44,6 +42,7 @@ public class App {
         this.modifyNNMenu = new ModifyNNMenu(actualUI,this);
         this.trainNNMenu = new TrainNNMenu(actualUI,this);
         this.manageDBMenu = new ManageDBMenu(actualUI,this);
+        this.predictionMenu = new PredictionMenu(actualUI,this);
 
 
         // inject dependencies between menus
@@ -51,6 +50,7 @@ public class App {
         this.mainMenu.setModifyNNMenu(this.modifyNNMenu); // from MainMenu to NewModifyMenu
         this.mainMenu.setTrainNNMenu(this.trainNNMenu); // from MainMenu to TrainNNMenu
         this.mainMenu.setManageDBMenu(this.manageDBMenu); // from MainMenu to ManageDBMenu
+        this.mainMenu.setPredictionMenu(this.predictionMenu); // from MainMenu to PredictionMenu
 
         // "new/modify" menu connections
         this.modifyNNMenu.setMainMenu(this.mainMenu); // from NewModifyMenu to MainMenu
@@ -60,6 +60,9 @@ public class App {
 
         // "manage db" menu connections
         this.manageDBMenu.setMainMenu(this.mainMenu); // from ManageDBMenu to MainMenu
+
+        // "prediction" menu connections
+        this.predictionMenu.setMainMenu(this.mainMenu); // from PredictionMenu to MainMenu
 
 
 
