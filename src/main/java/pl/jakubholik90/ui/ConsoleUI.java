@@ -46,28 +46,23 @@ public class ConsoleUI implements UI{
         List<String[]> activationsToShow = new ArrayList<>();
         for (int layer=0; layer < activationsMatrix.size(); layer++) {
             String[] layerToShow = new String[activationsMatrix.get(layer).length];
-            if (showEmpty) {
-                if (layer == 0) {
-                    for (int node = 0; node < activationsMatrix.get(layer).length; node++) {
-                        layerToShow[node] = "Inp";
-                    }
-                } else if (layer == activationsMatrix.size()-1) {
-                    for (int node = 0; node < activationsMatrix.get(layer).length; node++) {
-                        layerToShow[node] = "Out";
-                    }
-                } else {
-                    for (int node = 0; node < activationsMatrix.get(layer).length; node++) {
-                        layerToShow[node] = "Hi" + layer;
-                    }
+            if (layer == 0) {
+                for (int node = 0; node < activationsMatrix.get(layer).length; node++) {
+                    layerToShow[node] = "Inp";
                 }
-
+            } else if (layer == activationsMatrix.size()-1) {
+                for (int node = 0; node < activationsMatrix.get(layer).length; node++) {
+                        layerToShow[node] = "Out";
+                }
             } else {
                 for (int node = 0; node < activationsMatrix.get(layer).length; node++) {
-                    layerToShow[node] = String.format("%.2f", activationsMatrix.get(layer)[node]);
+                    if (showEmpty) {
+                        layerToShow[node] = "Hi" + layer;
+                    } else {
+                        layerToShow[node] = String.format("%.2f", activationsMatrix.get(layer)[node]);
+                    }
                 }
             }
-
-
             activationsToShow.add(layerToShow);
         }
 

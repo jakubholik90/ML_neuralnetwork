@@ -18,6 +18,7 @@ public class TrainNNMenu extends MenuAbstract {
     private DatabaseService dbService = new DatabaseService(actualUI, app);
     private DataSet dataSet = null;
     private boolean dataVerified = false;
+    private boolean networkIsTrained = false;
 
     public TrainNNMenu(UI actualUI, App app) throws SQLException {
         super(actualUI, app);
@@ -64,6 +65,7 @@ public class TrainNNMenu extends MenuAbstract {
                 break;
             case 7:
                 // Handle View actual structure
+                handleViewActualStructure();
                 break;
             case 0:
                 // Handle Back to Main menu
@@ -97,6 +99,7 @@ public class TrainNNMenu extends MenuAbstract {
             this.dataSet = dbSetByName;
             actualUI.displayMessage("Data set '" + dbSetName + "' selected for training. Verify the data before training.");
             this.dataVerified = false;
+            this.networkIsTrained = false;
         }
 
         this.runMenu();
@@ -159,12 +162,27 @@ public class TrainNNMenu extends MenuAbstract {
                 }
                 neuralNetwork.step2BackPropagation(trainingDataRecordList);
                 actualUI.displayMessage("Training completed.");
+                this.networkIsTrained = true;
             } else {
                 actualUI.displayMessage("Data set not verified. Please verify the data before training.");
             }
         } else {
             actualUI.displayMessage("No data set selected. Please select a data set first.");
         }
+        this.runMenu();
+    }
+
+    private void handleViewActualStructure() {
+        NeuralNetwork neuralNetwork = app.getNeuralNetwork();
+        if (!networkIsTrained) {
+            actualUI.displayMessage("Warning: The neural network has not been trained yet. Displaying empty structure.");
+            actualUI.displayNeuralNetwork(neuralNetwork, true);
+        } else {
+            actualUI.displayMessage("Displaying trained neural network structure.");
+            actualUI.displayNeuralNetwork(neuralNetwork, false);
+        }
+
+
         this.runMenu();
     }
 
