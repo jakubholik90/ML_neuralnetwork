@@ -3,10 +3,13 @@ package pl.jakubholik90.menus;
 import pl.jakubholik90.database.DataRecord;
 import pl.jakubholik90.database.DataSet;
 import pl.jakubholik90.database.DatabaseService;
+import pl.jakubholik90.domains.NeuralNetwork;
+import pl.jakubholik90.domains.TrainingDataRecord;
 import pl.jakubholik90.ui.App;
 import pl.jakubholik90.ui.UI;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TrainNNMenu extends MenuAbstract {
@@ -57,6 +60,7 @@ public class TrainNNMenu extends MenuAbstract {
                 break;
             case 6:
                 // Handle Start Training
+                handleStartTraining();
                 break;
             case 7:
                 // Handle View actual structure
@@ -140,4 +144,28 @@ public class TrainNNMenu extends MenuAbstract {
         }
         this.runMenu();
     }
+
+    private void handleStartTraining() throws SQLException {
+        if (this.dataSet != null) {
+            if (this.dataVerified) {
+                actualUI.displayMessage("Starting training on data set: " + this.dataSet.getName());
+                HashMap<Integer, DataRecord> trainingData = dbService.getAllDataRecordsFromSet(this.dataSet);
+                NeuralNetwork neuralNetwork = app.getNeuralNetwork();
+                ArrayList<TrainingDataRecord> trainingDataRecordList = new ArrayList<>(trainingData.size());
+                for (Integer id : trainingData.keySet()) {
+                    DataRecord record = trainingData.get(id);
+                    TrainingDataRecord trainingDataRecord = new TrainingDataRecord(record.inputData(), record.outputData());
+                    trainingDataRecordList.add(trainingDataRecord);
+                }
+                neuralNetwork.step2BackPropagation(trainingDataRecordList);
+                actualUI.displayMessage("Training completed.");
+            } else {
+                actualUI.displayMessage("Data set not verified. Please verify the data before training.");
+            }
+        } else {
+            actualUI.displayMessage("No data set selected. Please select a data set first.");
+        }
+        this.runMenu();
+    }
+
 }
