@@ -16,10 +16,5 @@ public class Main {
         App app = new App(new ConsoleUI());
         app.runApp();
 
-
-
-
-
-
     }
 }

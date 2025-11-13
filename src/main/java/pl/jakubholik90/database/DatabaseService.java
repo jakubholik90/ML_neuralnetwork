@@ -5,6 +5,7 @@ import pl.jakubholik90.ui.UI;
 
 import java.sql.*;
 import java.util.*;
+import pl.jakubholik90.domains.NeuralNetwork;
 
 public class DatabaseService {
 
@@ -75,6 +76,27 @@ public class DatabaseService {
 
     public HashMap<Integer, DataRecord> getAllDataRecords() throws SQLException {
         String query = "SELECT * FROM training_data";
+        HashMap<Integer, DataRecord> dbRecordMap = new HashMap<>();
+        try (Connection connection = setConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet= statement.executeQuery(query)){
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String setName = resultSet.getString("set_name");
+                String inputArrayString = resultSet.getString("input_array");
+                String outputArrayString = resultSet.getString("output_array");
+                Double[] inputArray = parseStringToDoubleArray(inputArrayString);
+                Double[] outputArray = parseStringToDoubleArray(outputArrayString);
+                DataRecord dbRecord = new DataRecord(setName,inputArray, outputArray);
+                dbRecordMap.put(id,dbRecord);
+            }
+        }
+        return dbRecordMap;
+    }
+
+    public HashMap<Integer, DataRecord> getAllDataRecordsFromSet(DataSet dbSet) throws SQLException {
+        String dbSetName = dbSet.getName();
+        String query = "SELECT * FROM training_data WHERE set_name = '" + dbSetName + "'";
         HashMap<Integer, DataRecord> dbRecordMap = new HashMap<>();
         try (Connection connection = setConnection();
              Statement statement = connection.createStatement();
@@ -228,6 +250,47 @@ public class DatabaseService {
             doubleValues[i] = Double.parseDouble(stringValues[i]);
         }
         return doubleValues;
+    }
+
+    public boolean verifyDataSetSize(DataSet dbSet) throws SQLException {
+        HashMap<Integer, DataRecord> allDataRecordsFromSet = getAllDataRecordsFromSet(dbSet);
+        int inputSize = 0;
+        int outputSize = 0;
+        for (Integer key : allDataRecordsFromSet.keySet()) {
+            DataRecord record = allDataRecordsFromSet.get(key);
+            int actualInputSize = record.inputData().length;
+            if (inputSize == 0) {
+                inputSize = actualInputSize;
+            } else {
+                if (inputSize != actualInputSize) {
+                    return false;
+                }
+            }
+            int actualOutputSize = record.outputData().length;
+            if (outputSize == 0) {
+                outputSize = actualOutputSize;
+            } else {
+                if (outputSize != actualOutputSize) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean verifyDataSetMatchesStructure(DataSet dbSet, NeuralNetwork neuralNetwork) throws SQLException {
+        HashMap<Integer, DataRecord> allDataRecordsFromSet = getAllDataRecordsFromSet(dbSet);
+        int expectedInputSize = neuralNetwork.getStructure()[0];
+        int expectedOutputSize = neuralNetwork.getStructure()[neuralNetwork.getStructure().length-1];
+        for (Integer key : allDataRecordsFromSet.keySet()) {
+            DataRecord record = allDataRecordsFromSet.get(key);
+            int actualInputSize = record.inputData().length;
+            int actualOutputSize = record.outputData().length;
+            if (expectedInputSize != actualInputSize || expectedOutputSize != actualOutputSize) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
