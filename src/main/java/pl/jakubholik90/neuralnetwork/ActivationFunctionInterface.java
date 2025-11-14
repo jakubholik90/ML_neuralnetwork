@@ -1,4 +1,4 @@
-package pl.jakubholik90.domains;
+package pl.jakubholik90.neuralnetwork;
 
 @FunctionalInterface
 public interface ActivationFunctionInterface {

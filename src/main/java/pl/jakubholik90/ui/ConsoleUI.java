@@ -1,10 +1,11 @@
 package pl.jakubholik90.ui;
 
-import pl.jakubholik90.domains.NeuralNetwork;
+import pl.jakubholik90.neuralnetwork.NeuralNetwork;
 import pl.jakubholik90.menus.MenuItem;
 import pl.jakubholik90.menus.MenuTable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -158,5 +159,23 @@ public class ConsoleUI implements UI{
         }
         String lineToShow = id + ": " + name + descriptionOptional;
         displayMessage(lineToShow);
+    }
+
+    @Override
+    public void displayPlot(Double[] xValues, Double[] yValues, String title, String xLabel, String yLabel) {
+        Integer[] xValuesInt = new Integer[xValues.length];
+        HashMap<Integer, Double> plotMap = new HashMap<>();
+        Double[] yValuesAdjusted = new Double[xValues.length];
+        displayMessage("--- " + title + " ---");
+        for (int i = 0; i < xValuesInt.length; i++) {
+            xValuesInt[i] = xValues[i].intValue();
+            if (i < yValues.length) {
+                yValuesAdjusted[i] = yValues[i];
+            } else {
+                yValuesAdjusted[i] = 0.0;
+            }
+            plotMap.put(xValuesInt[i], yValues[i]);
+            displayMessage(xLabel + ":" + xValuesInt[i] + ", " + yLabel + ":" + yValuesAdjusted[i]);
+        }
     }
 }

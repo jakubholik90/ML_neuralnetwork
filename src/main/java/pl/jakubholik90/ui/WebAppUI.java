@@ -1,6 +1,6 @@
 package pl.jakubholik90.ui;
 
-import pl.jakubholik90.domains.NeuralNetwork;
+import pl.jakubholik90.neuralnetwork.NeuralNetwork;
 import pl.jakubholik90.menus.MenuTable;
 
 public class WebAppUI implements UI{
@@ -31,5 +31,10 @@ public class WebAppUI implements UI{
     public String getUserInput() {
         //PLACEHOLDER - to be implemented in future
         return "";
+    }
+
+    @Override
+    public void displayPlot(Double[] xValues, Double[] yValues, String title, String xLabel, String yLabel) {
+        //PLACEHOLDER - to be implemented in future
     }
 }

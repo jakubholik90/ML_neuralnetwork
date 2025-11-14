@@ -3,8 +3,9 @@ package pl.jakubholik90.menus;
 import pl.jakubholik90.database.DataRecord;
 import pl.jakubholik90.database.DataSet;
 import pl.jakubholik90.database.DatabaseService;
-import pl.jakubholik90.domains.NeuralNetwork;
-import pl.jakubholik90.domains.TrainingDataRecord;
+import pl.jakubholik90.neuralnetwork.NeuralNetwork;
+import pl.jakubholik90.neuralnetwork.NeuralNetworkTrainLog;
+import pl.jakubholik90.neuralnetwork.TrainingDataRecord;
 import pl.jakubholik90.ui.App;
 import pl.jakubholik90.ui.UI;
 
@@ -19,6 +20,7 @@ public class TrainNNMenu extends MenuAbstract {
     private DataSet dataSet = null;
     private boolean dataVerified = false;
     private boolean networkIsTrained = false;
+    private NeuralNetworkTrainLog trainingLog = null;
 
     public TrainNNMenu(UI actualUI, App app) throws SQLException {
         super(actualUI, app);
@@ -32,7 +34,7 @@ public class TrainNNMenu extends MenuAbstract {
         menuTable.addMenuItem(new MenuItem(3,"Verify data", "Verify if all data records in the set have the same size"));
         menuTable.addMenuItem(new MenuItem(4,"Start Training", "Start training with actual set of training data"));
         menuTable.addMenuItem(new MenuItem(5,"View actual structure", "Visualise the structure (activations) of neural network"));
-        menuTable.addMenuItem(new MenuItem(6,"Show training plot", "Showing plot of error convergence during training"));
+        menuTable.addMenuItem(new MenuItem(6,"Show training log", "Showing error convergence during training"));
         menuTable.addMenuItem(new MenuItem(0,"Back to Main menu", ""));
         return menuTable;
     }
@@ -62,6 +64,7 @@ public class TrainNNMenu extends MenuAbstract {
                 break;
             case 6:
                 // Handle Show training plot
+                handleShowTrainingLog();
                 break;
             case 0:
                 // Handle Back to Main menu
@@ -156,9 +159,11 @@ public class TrainNNMenu extends MenuAbstract {
                     TrainingDataRecord trainingDataRecord = new TrainingDataRecord(record.inputData(), record.outputData());
                     trainingDataRecordList.add(trainingDataRecord);
                 }
-                neuralNetwork.step2BackPropagation(trainingDataRecordList);
+                NeuralNetworkTrainLog neuralNetworkTrainLog = neuralNetwork.step2BackPropagation(trainingDataRecordList);
                 actualUI.displayMessage("Training completed.");
                 this.networkIsTrained = true;
+                actualUI.displayMessage("Error convergence saved in training log.");
+                this.trainingLog = neuralNetworkTrainLog;
             } else {
                 actualUI.displayMessage("Data set not verified. Please verify the data before training.");
             }
@@ -184,5 +189,22 @@ public class TrainNNMenu extends MenuAbstract {
 
     public boolean isNetworkIsTrained() {
         return networkIsTrained;
+    }
+
+    private void handleShowTrainingLog() {
+        if (this.trainingLog != null) {
+            Double[] errorPerEpoch = this.trainingLog.getErrorPerEpoch();
+            Double[] xValues = new Double[errorPerEpoch.length];
+            Double[] yValues = new Double[errorPerEpoch.length];
+
+            for (int i = 0; i < errorPerEpoch.length; i++) {
+                xValues[i] = (double) i;
+                yValues[i] = errorPerEpoch[i];
+            }
+            actualUI.displayPlot(xValues, yValues, "Training Error Convergence", "Epoch", "Error");
+        } else {
+            actualUI.displayMessage("No training log available. Please train the neural network first.");
+        }
+        this.runMenu();
     }
 }

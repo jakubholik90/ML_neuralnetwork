@@ -1,4 +1,4 @@
-package pl.jakubholik90.domains;
+package pl.jakubholik90.neuralnetwork;
 
 import pl.jakubholik90.exceptions.WrongInputSizeException;
 import pl.jakubholik90.others.NumPyLike;
@@ -128,7 +128,9 @@ public class NeuralNetwork {
     }
 
     // step 2 BACK PROPAGATION
-    public void step2BackPropagation(List<TrainingDataRecord> trainingDataRecordList) {
+    public NeuralNetworkTrainLog step2BackPropagation(List<TrainingDataRecord> trainingDataRecordList) {
+        NeuralNetworkTrainLog returnLog = new NeuralNetworkTrainLog(this.numberOfIterations);
+
         //for loop after max. iterations number
         for (int iteration = 0; iteration < this.numberOfIterations; iteration++) {
             // list of partial derivatives in each layer
@@ -234,8 +236,10 @@ public class NeuralNetwork {
             }
 
             this.errorProgression.add(error); // adding current error to progression
+            returnLog.setErrorForEpoch(iteration,error); // setting error to train log
             // System.out.println("iteration:" + iteration + ", difference:" + Arrays.toString(difference) + ", error:" + error);
         }
+        return returnLog;
 
     }
 

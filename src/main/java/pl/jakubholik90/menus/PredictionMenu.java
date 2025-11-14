@@ -1,6 +1,6 @@
 package pl.jakubholik90.menus;
 
-import pl.jakubholik90.domains.NeuralNetwork;
+import pl.jakubholik90.neuralnetwork.NeuralNetwork;
 import pl.jakubholik90.ui.App;
 import pl.jakubholik90.ui.UI;
 

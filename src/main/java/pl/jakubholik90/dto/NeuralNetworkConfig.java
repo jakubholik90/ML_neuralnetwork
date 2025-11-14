@@ -1,8 +1,8 @@
 package pl.jakubholik90.dto;
 
 
-import pl.jakubholik90.domains.ActivationFunctionInterface;
-import pl.jakubholik90.domains.ActivationFunctions;
+import pl.jakubholik90.neuralnetwork.ActivationFunctionInterface;
+import pl.jakubholik90.neuralnetwork.ActivationFunctions;
 
 public class NeuralNetworkConfig {
 

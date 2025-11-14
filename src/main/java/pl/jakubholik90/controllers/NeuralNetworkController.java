@@ -1,6 +1,6 @@
 package pl.jakubholik90.controllers;
 
-import pl.jakubholik90.domains.NeuralNetwork;
+import pl.jakubholik90.neuralnetwork.NeuralNetwork;
 import pl.jakubholik90.dto.NeuralNetworkConfig;
 
 public class NeuralNetworkController {

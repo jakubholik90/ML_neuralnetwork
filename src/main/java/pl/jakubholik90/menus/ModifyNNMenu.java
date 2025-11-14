@@ -1,6 +1,5 @@
 package pl.jakubholik90.menus;
 
-import pl.jakubholik90.domains.ActivationFunctions;
 import pl.jakubholik90.dto.ActivationFunctionsEnum;
 import pl.jakubholik90.dto.NeuralNetworkConfig;
 import pl.jakubholik90.ui.App;

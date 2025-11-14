@@ -1,7 +1,7 @@
 package pl.jakubholik90.ui;
 
 import pl.jakubholik90.controllers.NeuralNetworkController;
-import pl.jakubholik90.domains.NeuralNetwork;
+import pl.jakubholik90.neuralnetwork.NeuralNetwork;
 import pl.jakubholik90.dto.NeuralNetworkConfig;
 import pl.jakubholik90.menus.*;
 

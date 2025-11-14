@@ -5,7 +5,7 @@ import pl.jakubholik90.ui.UI;
 
 import java.sql.*;
 import java.util.*;
-import pl.jakubholik90.domains.NeuralNetwork;
+import pl.jakubholik90.neuralnetwork.NeuralNetwork;
 
 public class DatabaseService {
 
