@@ -2,10 +2,10 @@
 inspired by workshop with https://github.com/gannimet/
 
 ## Project Structure
-###Overview
+### Overview
 This is a Java-based neural network training and prediction application with a menu-driven console interface. The application allows users to configure neural networks, manage training data in an SQLite database, train networks using backpropagation, and make predictions.
 
-###Package Structure (15.11.2025)
+### Package Structure (15.11.2025)
 pl.jakubholik90/
 ├── Main.java                          # Application entry point
 ├── controllers/
@@ -71,7 +71,7 @@ Extensible UI interface for future implementations (web, GUI)
 Centralized network configuration with sensible defaults
 Runtime modification of structure, learning rate, iterations, and activation functions
 
-#### Key Features
+### Key Features
 
 Modify NN Settings: Adjust inputs, outputs, hidden layers, activation functions, learning rate, and iterations
 Manage Database: Insert, update, delete, and organize training data into sets
