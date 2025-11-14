@@ -63,6 +63,7 @@ public class App {
 
         // "prediction" menu connections
         this.predictionMenu.setMainMenu(this.mainMenu); // from PredictionMenu to MainMenu
+        this.predictionMenu.setTrainNNMenu(this.trainNNMenu); // from PredictionMenu to TrainNNMenu
 
 
 

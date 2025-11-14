@@ -30,11 +30,9 @@ public class TrainNNMenu extends MenuAbstract {
         menuTable.addMenuItem(new MenuItem(1,"Select data", "Select data set for training"));
         menuTable.addMenuItem(new MenuItem(2,"View data", "View current data set"));
         menuTable.addMenuItem(new MenuItem(3,"Verify data", "Verify if all data records in the set have the same size"));
-        menuTable.addMenuItem(new MenuItem(4,"Load", "Load the structure and parameters of neural network from file"));
-        menuTable.addMenuItem(new MenuItem(5,"Save", "Save the structure and parameters of neural network to file"));
-        menuTable.addMenuItem(new MenuItem(6,"Start Training", "Start training with actual set of training data"));
-        menuTable.addMenuItem(new MenuItem(7,"View actual structure", "Visualise the structure (activations) of neural network"));
-        menuTable.addMenuItem(new MenuItem(8,"Show training plot", "Showing plot of error convergence during training"));
+        menuTable.addMenuItem(new MenuItem(4,"Start Training", "Start training with actual set of training data"));
+        menuTable.addMenuItem(new MenuItem(5,"View actual structure", "Visualise the structure (activations) of neural network"));
+        menuTable.addMenuItem(new MenuItem(6,"Show training plot", "Showing plot of error convergence during training"));
         menuTable.addMenuItem(new MenuItem(0,"Back to Main menu", ""));
         return menuTable;
     }
@@ -55,20 +53,14 @@ public class TrainNNMenu extends MenuAbstract {
                 handleVerifyData();
                 break;
             case 4:
-                // Handle Load
-                break;
-            case 5:
-                // Handle Save
-                break;
-            case 6:
                 // Handle Start Training
                 handleStartTraining();
                 break;
-            case 7:
+            case 5:
                 // Handle View actual structure
                 handleViewActualStructure();
                 break;
-            case 8:
+            case 6:
                 // Handle Show training plot
                 break;
             case 0:
@@ -190,4 +182,7 @@ public class TrainNNMenu extends MenuAbstract {
         this.runMenu();
     }
 
+    public boolean isNetworkIsTrained() {
+        return networkIsTrained;
+    }
 }

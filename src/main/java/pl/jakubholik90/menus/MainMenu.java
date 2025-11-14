@@ -18,12 +18,11 @@ public class MainMenu extends MenuAbstract {
     @Override
     public MenuTable create() {
         MenuTable menuTable = new MenuTable("Main Menu","");
-        menuTable.addMenuItem(new MenuItem(1,"Modify Neural Network", "Modify / display neural network settings"));
-        menuTable.addMenuItem(new MenuItem(2,"Manage Training Data", "Manage training data from database"));
-        menuTable.addMenuItem(new MenuItem(3,"Visualise Neural Network", "Visualise the structure of the neural network"));
-        menuTable.addMenuItem(new MenuItem(4,"Train Neural Network", "Train the neural network with training data"));
-        menuTable.addMenuItem(new MenuItem(5,"Run prediction", "Run a prediction with custom input"));
-        menuTable.addMenuItem(new MenuItem(6,"Save/Load Neural network", "Save actual or load neural network from file"));
+        menuTable.addMenuItem(new MenuItem(1,"Modify NN Settings", "Modify / display neural network settings"));
+        menuTable.addMenuItem(new MenuItem(2,"Manage Database", "Manage training data from database"));
+        menuTable.addMenuItem(new MenuItem(3,"Train NN", "Train the neural network with training data"));
+        menuTable.addMenuItem(new MenuItem(4,"Run prediction", "Run a prediction with custom input"));
+        menuTable.addMenuItem(new MenuItem(5,"Save/Load NN", "Save actual or load neural network from file"));
         menuTable.addMenuItem(new MenuItem(0,"Exit app", ""));
         return menuTable;
     }
@@ -40,17 +39,14 @@ public class MainMenu extends MenuAbstract {
                 manageDBMenu.runMenu();
                 break;
             case 3:
-                handleVisualise();
-                break;
-            case 4:
                 // Handle Train Neural Network
                 trainNNMenu.runMenu();
                 break;
-            case 5:
+            case 4:
                 // Handle Run prediction
                 predictionMenu.runMenu();
                 break;
-            case 6:
+            case 5:
                 // Handle Save/Load Neural Network
                 break;
             case 0:
@@ -80,11 +76,6 @@ public class MainMenu extends MenuAbstract {
 
     public void setPredictionMenu(PredictionMenu predictionMenu) {
         this.predictionMenu = predictionMenu;
-    }
-
-    private void handleVisualise() {
-        actualUI.displayNeuralNetwork(app.getNeuralNetwork(),true);
-        this.runMenu();
     }
 
 }
