@@ -19,7 +19,9 @@ public class ModifyNNMenu extends MenuAbstract {
 
     @Override
     public MenuTable create() {
-        previousConfig = new NeuralNetworkConfig(this.app.getConfig()); // copy of current config
+        if (!this.isChanged) {
+            previousConfig = new NeuralNetworkConfig(this.app.getConfig()); // copy of current config
+        }
 
         String additionalMessage;
         if (this.isChanged) {
@@ -103,7 +105,8 @@ public class ModifyNNMenu extends MenuAbstract {
             } else {
                 this.runMenu();
             }
-
+        } else {
+            mainMenu.runMenu();
         }
 
     }
