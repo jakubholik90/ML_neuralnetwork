@@ -21,6 +21,14 @@ public class NeuralNetworkConfig {
         this.hiddenLayerActivationFunction = ActivationFunctionsEnum.LEAKY_RELU.function;
     }
 
+    public NeuralNetworkConfig(NeuralNetworkConfig other) { // constructor for copying from other config
+        this.structure = other.structure.clone(); // Clone the array
+        this.numberOfIterations = other.numberOfIterations;
+        this.eta = other.eta;
+        this.outputLayerActivationFunction = other.outputLayerActivationFunction;
+        this.hiddenLayerActivationFunction = other.hiddenLayerActivationFunction;
+    }
+
     public void setNumberOfInputs(int numberOfInputs) {
         this.structure[0] = numberOfInputs;
     }
