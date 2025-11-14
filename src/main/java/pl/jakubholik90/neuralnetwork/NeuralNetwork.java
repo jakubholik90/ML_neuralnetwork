@@ -150,6 +150,8 @@ public class NeuralNetwork {
                 deltaWlist.add(i, null);
             }
 
+
+
             // list of gradient accumulators for this iteration
             for (int layer = 0; layer < this.structure.length; layer++) {
                 if (layer == 0) {
@@ -169,6 +171,8 @@ public class NeuralNetwork {
             Double[] difference = new Double[trainingDataRecordList.getFirst().trainingOutput().length]; // difference between calculated preduction and given output in training data
             Double[] outputLayerDerivative = new Double[this.activationsMatrix.getLast().length];
             double error = 0.0;
+
+
 
             //for loop after each training data record
             for (int trainingDataNumber = 0; trainingDataNumber < trainingDataRecordList.size(); trainingDataNumber++) {
