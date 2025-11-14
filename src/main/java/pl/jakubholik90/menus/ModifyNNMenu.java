@@ -9,6 +9,9 @@ import java.util.Arrays;
 
 public class ModifyNNMenu extends MenuAbstract {
     private MainMenu mainMenu;
+    private NeuralNetworkConfig previousConfig;
+
+    private boolean isChanged = false;
 
     public ModifyNNMenu(UI actualUI, App app) {
         super(actualUI, app);
@@ -16,8 +19,16 @@ public class ModifyNNMenu extends MenuAbstract {
 
     @Override
     public MenuTable create() {
-        MenuTable menuTable = new MenuTable("Modify Neural Network Menu","");
-        menuTable.addMenuItem(new MenuItem(1,"Display Settings", "Display the structure and parameters of the current neural network"));
+        previousConfig = this.app.getConfig();
+
+        String additionalMessage;
+        if (this.isChanged) {
+            additionalMessage = "Structure modified";
+        } else {
+            additionalMessage = "No changes made to structure yet";
+        }
+        MenuTable menuTable = new MenuTable("Modify Neural Network Menu",additionalMessage);
+        menuTable.addMenuItem(new MenuItem(1,"Display", "Display the structure and parameters of the current neural network"));
         menuTable.addMenuItem(new MenuItem(2,"Inputs", "Define the number of input neurons"));
         menuTable.addMenuItem(new MenuItem(3,"Hidden Layers", "Define the number of hidden layers and neurons in each layer"));
         menuTable.addMenuItem(new MenuItem(4,"Outputs", "Define the number of output neurons"));
@@ -25,7 +36,8 @@ public class ModifyNNMenu extends MenuAbstract {
         menuTable.addMenuItem(new MenuItem(6,"Activation Function - Output Layer", "Set activation function for output layer"));
         menuTable.addMenuItem(new MenuItem(7,"Eta", "Define the learning rate (eta) for training the neural network"));
         menuTable.addMenuItem(new MenuItem(8,"Iterations", "Define the number of training iterations for the neural network"));
-        menuTable.addMenuItem(new MenuItem(0,"Update and Back", "Update neural network with current config. and return to the main menu"));
+        menuTable.addMenuItem(new MenuItem(9,"Save Changes", "Save changes and rebuild the neural network"));
+        menuTable.addMenuItem(new MenuItem(0,"Back", "Return to the main menu"));
         return menuTable;
     }
 
@@ -64,16 +76,43 @@ public class ModifyNNMenu extends MenuAbstract {
                 // Handle Iterations
                 handleIterations();
                 break;
+            case 9:
+                // Handle Save Changes
+                handleSaveChanges();
+                break;
             case 0:
                 // Handle Back to Main Menu
-                app.buildNeuralNetwork();
-                mainMenu.runMenu();
+                handleBackToMain();
                 break;
             default:
                 // Handle invalid choice
                 invalidChoice();
                 break;
         }
+    }
+
+    private void handleBackToMain() {
+        if (this.isChanged) {
+            actualUI.displayMessage("You have unsaved changes. Press \"Q\" to quit without saving or any other key for back to menu.");
+            String userInput = actualUI.getUserInput();
+            if (userInput.equalsIgnoreCase("Q")) {
+                actualUI.displayMessage("Discarding changes and returning to Main Menu.");
+                app.setConfig(previousConfig);
+                this.isChanged = false;
+                mainMenu.runMenu();
+            } else {
+                this.runMenu();
+            }
+
+        }
+
+    }
+
+    private void handleSaveChanges() {
+        app.buildNeuralNetwork();
+        actualUI.displayMessage("Changes saved and neural network rebuilt successfully.");
+        this.isChanged = false;
+        this.runMenu();
     }
 
     public void setMainMenu(MainMenu menu) {
@@ -103,6 +142,7 @@ public class ModifyNNMenu extends MenuAbstract {
         int inputNeurons = Integer.valueOf(actualUI.getUserInput());
         config.setNumberOfInputs(inputNeurons);
         actualUI.displayMessage("Number of input neurons updated successfully to " + inputNeurons + ".");
+        this.isChanged = true;
         this.runMenu();
     }
 
@@ -129,6 +169,7 @@ public class ModifyNNMenu extends MenuAbstract {
                 int neuronsToAdd = Integer.valueOf(actualUI.getUserInput());
                 config.insertHiddenLayer(positionToAdd, neuronsToAdd);
                 actualUI.displayMessage("Hidden layer inserted successfully at position " + positionToAdd + " with " + neuronsToAdd + " neurons.");
+                this.isChanged = true;
                 break;
             case 2:
                 // Modify hidden layer
@@ -138,6 +179,7 @@ public class ModifyNNMenu extends MenuAbstract {
                 int neuronsToModify = Integer.valueOf(actualUI.getUserInput());
                 config.modifyHiddenLayer(positionToModify, neuronsToModify);
                 actualUI.displayMessage("Hidden layer at position " + positionToModify + " modified successfully to " + neuronsToModify + " neurons.");
+                this.isChanged = true;
                 break;
             case 3:
                 // Delete hidden layer
@@ -151,6 +193,7 @@ public class ModifyNNMenu extends MenuAbstract {
                 actualUI.displayMessage("Deleting hidden layer at position: "  + positionToDelete);
                 config.deleteHiddenLayer(positionToDelete);
                 actualUI.displayMessage("Hidden layer at position " + positionToDelete + " deleted successfully.");
+                this.isChanged = true;
                 break;
             case 0:
                 // Back
@@ -176,6 +219,7 @@ public class ModifyNNMenu extends MenuAbstract {
         int outputNeurons = Integer.valueOf(actualUI.getUserInput());
         config.setNumberOfOutputs(outputNeurons);
         actualUI.displayMessage("Number of output neurons updated successfully to " + outputNeurons + ".");
+        this.isChanged = true;
         this.runMenu();
     }
 
@@ -206,6 +250,7 @@ public class ModifyNNMenu extends MenuAbstract {
                 break;
         }
         actualUI.displayMessage("Activation function for output layer updated successfully to " + config.getNameActivationFunction(config.getOutputLayerActivationFunction()) + ".");
+        this.isChanged = true;
         this.runMenu();
     }
 
@@ -236,6 +281,7 @@ public class ModifyNNMenu extends MenuAbstract {
                 break;
         }
         actualUI.displayMessage("Activation function for hidden layers updated successfully to " + config.getNameActivationFunction(config.getHiddenLayerActivationFunction()) + ".");
+        this.isChanged = true;
         this.runMenu();
     }
 
@@ -246,6 +292,7 @@ public class ModifyNNMenu extends MenuAbstract {
         double eta = Double.valueOf(actualUI.getUserInput());
         config.setEta(eta);
         actualUI.displayMessage("Learning rate updated successfully to " + eta + ".");
+        this.isChanged = true;
         this.runMenu();
     }
 
@@ -256,6 +303,7 @@ public class ModifyNNMenu extends MenuAbstract {
         int iterations = Integer.valueOf(actualUI.getUserInput());
         config.setNumberOfIterations(iterations);
         actualUI.displayMessage("Number of iterations updated successfully to " + iterations + ".");
+        this.isChanged = true;
         this.runMenu();
     }
 

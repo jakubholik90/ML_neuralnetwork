@@ -207,4 +207,10 @@ public class TrainNNMenu extends MenuAbstract {
         }
         this.runMenu();
     }
+
+    public void setAsUntrained() {
+        this.networkIsTrained = false;
+        this.dataVerified = false;
+        this.trainingLog = null;
+    }
 }

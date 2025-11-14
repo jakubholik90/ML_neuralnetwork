@@ -177,5 +177,54 @@ public class ConsoleUI implements UI{
             plotMap.put(xValuesInt[i], yValues[i]);
             displayMessage(xLabel + ":" + xValuesInt[i] + ", " + yLabel + ":" + yValuesAdjusted[i]);
         }
+
+        displayMessage("-------------------");
+        plotPoints(xValues, yValuesAdjusted);
+
+    }
+
+    private void plotPoints(Double[] xValues, Double[] yValues) {
+        // plot size
+        int height = 10;
+        int width = 50;
+
+        // plot max min range
+        double minY = Double.MAX_VALUE;
+        double maxY = Double.MIN_VALUE;
+        double minX = Double.MAX_VALUE;
+        double maxX = Double.MIN_VALUE;
+        for (int i = 0; i < xValues.length; i++) {
+            minY = Math.min(minY, yValues[i]);
+            maxY = Math.max(maxY, yValues[i]);
+            minX = Math.min(minX, xValues[i]);
+            maxX = Math.max(maxX, xValues[i]);
+        }
+
+        char[][] grid = new char[height][width];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                grid[i][j] = '.';
+            }
+        }
+
+        for (int i = 0; i < xValues.length; i++) {
+            int x = (int) ((xValues[i] - minX) / (maxX - minX) * (width - 1));
+            int y = (int) ((yValues[i] - minY) / (maxY - minY) * (height - 1));
+            y = height - 1 - y;
+            if (x >= 0 && x < width && y >= 0 && y < height) {
+                grid[y][x] = '*';
+            }
+        }
+
+        // plotting Y axis
+        for (int i = 0; i < height; i++) {
+            double yVal = maxY - (i * (maxY - minY) / (height - 1));
+            System.out.printf("%8.2f | ", yVal);
+            System.out.println(grid[i]);
+        }
+
+        // plotting X axis
+        System.out.println("         " + "-".repeat(width));
+        System.out.printf("%9.2f%" + (width - 8) + ".2f%n", minX, maxX);
     }
 }

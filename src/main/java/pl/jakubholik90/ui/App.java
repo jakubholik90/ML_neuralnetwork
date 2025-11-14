@@ -69,6 +69,10 @@ public class App {
 
     }
 
+    public void setConfig (NeuralNetworkConfig config) {
+        this.currentConfig = config;
+    }
+
     public NeuralNetworkConfig getConfig() {
         if (this.currentConfig == null) {
             this.currentConfig = new NeuralNetworkConfig();
