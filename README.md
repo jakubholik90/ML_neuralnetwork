@@ -6,7 +6,9 @@ inspired by workshop with https://github.com/gannimet/
 This is a Java-based neural network training and prediction application with a menu-driven console interface. The application allows users to configure neural networks, manage training data in an SQLite database, train networks using backpropagation, and make predictions.
 
 ### Package Structure (15.11.2025)
+
 pl.jakubholik90/
+
 ├── Main.java                          # Application entry point
 ├── controllers/
 │   └── NeuralNetworkController.java   # Factory for creating neural networks

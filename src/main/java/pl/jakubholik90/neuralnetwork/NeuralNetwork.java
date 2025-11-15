@@ -133,43 +133,20 @@ public class NeuralNetwork {
 
         //for loop after max. iterations number
         for (int iteration = 0; iteration < this.numberOfIterations; iteration++) {
-            // list of partial derivatives in each layer
-            ArrayList<Double[]> partialDeltasList = new ArrayList<>(this.structure.length);
-            for (int i = 0; i < this.structure.length; i++) {
-                partialDeltasList.add(i, null);
-            }
-
-            // for loop after each layer
-            for (int i = 0; i < this.activationsMatrix.size(); i++) {
-                partialDeltasList.set(i, NumPyLike.zeros(this.weightedSumsMatrix.get(i).length));
-            }
-
-            // list of derivatives (differences??) from weights in each layer
-            ArrayList<Double[][]> deltaWlist = new ArrayList<>(this.structure.length);
-            for (int i = 0; i < this.structure.length; i++) {
-                deltaWlist.add(i, null);
-            }
-
-
 
             // list of gradient accumulators for this iteration
+            ArrayList<Double[][]> deltaWlist = new ArrayList<>(this.structure.length);
             for (int layer = 0; layer < this.structure.length; layer++) {
                 if (layer == 0) {
-                    deltaWlist.set(layer, new Double[0][0]); // empty Array in input layer (placeholder, weights are numbered starting with i=1=
+                    deltaWlist.add(layer, new Double[0][0]); // empty Array in input layer (placeholder, weights are numbered starting with i=1=
                 } else {
-                    for (int layerElement = 0; layerElement < this.weightsMatrix.get(layer).length; layerElement++) {
-                        deltaWlist.set(layer, NumPyLike.zeros2D(
-                                this.weightsMatrix.get(layer).length, // number of rows (number of neurons in previous layer + 1 (bias))
-                                this.weightsMatrix.get(layer)[layerElement].length // number of columns (number of neurons in current layer + 1 (bias))
-                        ));
-                    }
+                    deltaWlist.add(layer, NumPyLike.zeros2D(
+                            this.weightsMatrix.get(layer).length, // number of rows (number of neurons in previous layer + 1 (bias))
+                            this.weightsMatrix.get(layer)[0].length // number of columns (number of neurons in current layer + 1 (bias))
+                    ));
                 }
             }
 
-
-            // Double[] calculatedPrediction = new Double[trainingDataRecordList.size()]; - checking lower line
-            Double[] difference = new Double[trainingDataRecordList.getFirst().trainingOutput().length]; // difference between calculated preduction and given output in training data
-            Double[] outputLayerDerivative = new Double[this.activationsMatrix.getLast().length];
             double error = 0.0;
 
 
@@ -178,6 +155,12 @@ public class NeuralNetwork {
             for (int trainingDataNumber = 0; trainingDataNumber < trainingDataRecordList.size(); trainingDataNumber++) {
                 TrainingDataRecord dataRecord = trainingDataRecordList.get(trainingDataNumber);
 
+                // list of partial derivatives in each layer
+                ArrayList<Double[]> partialDeltasList = new ArrayList<>(this.structure.length);
+                for (int i = 0; i < this.structure.length; i++) {
+                    partialDeltasList.add(i, NumPyLike.zeros(this.weightedSumsMatrix.get(i).length));
+                }
+
                 // checking if data record has proper number of expected outputs
                 if (dataRecord.trainingOutput().length != this.activationsMatrix.getLast().length) {
                     throw new WrongInputSizeException("Output size of given training data does not match size of neural network structure (output layer)");
@@ -185,6 +168,9 @@ public class NeuralNetwork {
 
                 // feed forward pass
                 Double[] calculatedPrediction = this.step1FeedForward(dataRecord.trainingInput());
+
+                Double[] difference = new Double[dataRecord.trainingOutput().length]; // difference between calculated prediction and given output in training data
+
 
                 // loop after each element in output layer
                 for (int outputLayerElement = 0; outputLayerElement < dataRecord.trainingOutput().length; outputLayerElement++) {
@@ -196,8 +182,8 @@ public class NeuralNetwork {
                 //for loop after each output element
                 for (int layerElement = 0; layerElement < this.activationsMatrix.getLast().length; layerElement++) {
                     // partial delta in output layer = output layer derivative * output activation function ( weighted sum)
-                    outputLayerDerivative[layerElement] = 2 * difference[layerElement];
-                    partialDeltasList.get(this.activationsMatrix.size() - 1)[layerElement] = outputLayerDerivative[layerElement] * this.runOutputActivationFunction(this.weightedSumsMatrix.getLast()[layerElement], true);
+                    double outputLayerDerivative = 2 * difference[layerElement];
+                    partialDeltasList.get(this.activationsMatrix.size() - 1)[layerElement] = outputLayerDerivative * this.runOutputActivationFunction(this.weightedSumsMatrix.getLast()[layerElement], true);
                 }
 
                 // calculating deltas for hidden layers
@@ -233,15 +219,13 @@ public class NeuralNetwork {
             for (int layer = 1; layer < this.structure.length; layer++) {
                 for (int i = 0; i < this.weightsMatrix.get(layer).length; i++) {
                     for (int j = 0; j < this.weightsMatrix.get(layer)[i].length; j++) {
-                        double averageGradient = (deltaWlist.get(layer)[i][j] / trainingDataRecordList.size()) * (-1) * this.eta;
-                        this.weightsMatrix.get(layer)[i][j] += averageGradient; // adjusting weight with delta W
+                        double averageGradient = deltaWlist.get(layer)[i][j] / trainingDataRecordList.size();
+                        this.weightsMatrix.get(layer)[i][j] -= this.eta * averageGradient; // adjusting weight with delta W
                     }
                 }
             }
 
-            this.errorProgression.add(error); // adding current error to progression
-            returnLog.setErrorForEpoch(iteration,error); // setting error to train log
-            // System.out.println("iteration:" + iteration + ", difference:" + Arrays.toString(difference) + ", error:" + error);
+            returnLog.setErrorForEpoch(iteration,error / trainingDataRecordList.size()); // setting error to train log
         }
         return returnLog;
 
