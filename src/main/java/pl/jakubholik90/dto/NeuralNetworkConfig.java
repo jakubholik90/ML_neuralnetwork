@@ -15,9 +15,9 @@ public class NeuralNetworkConfig {
     public NeuralNetworkConfig() {
         // default config
         this.structure = new int[] {3,4,1};
-        this.numberOfIterations = 100;
-        this.eta = 0.01;
-        this.outputLayerActivationFunction = ActivationFunctionsEnum.SIGMOID.function;
+        this.numberOfIterations = 2000;
+        this.eta = 0.3;
+        this.outputLayerActivationFunction = ActivationFunctionsEnum.LEAKY_RELU.function;
         this.hiddenLayerActivationFunction = ActivationFunctionsEnum.LEAKY_RELU.function;
     }
 
