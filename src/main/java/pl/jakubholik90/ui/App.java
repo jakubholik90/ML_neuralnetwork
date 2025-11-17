@@ -64,7 +64,8 @@ public class App {
         this.predictionMenu.setMainMenu(this.mainMenu); // from PredictionMenu to MainMenu
         this.predictionMenu.setTrainNNMenu(this.trainNNMenu); // from PredictionMenu to TrainNNMenu
         // "save/load nn" menu connections
-        this.saveLoadNNMenu.setMainMenu(this.mainMenu); // from SaveLoadNNMenu
+        this.saveLoadNNMenu.setMainMenu(this.mainMenu); // from SaveLoadNNMenu to MainMenu
+        this.saveLoadNNMenu.setTrainNNMenu(this.trainNNMenu); // from SaveLoadNNMenu to TrainNNMenu
     }
 
     public void setConfig (NeuralNetworkConfig config) {

@@ -213,4 +213,8 @@ public class TrainNNMenu extends MenuAbstract {
         this.dataVerified = false;
         this.trainingLog = null;
     }
+
+    public DataSet getDataSet() {
+        return dataSet;
+    }
 }

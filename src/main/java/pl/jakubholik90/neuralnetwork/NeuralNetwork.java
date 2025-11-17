@@ -14,10 +14,10 @@ public class NeuralNetwork {
     private final double eta;
     private final ActivationFunctionInterface outputLayerActivationFunction;
     private final ActivationFunctionInterface hiddenLayerActivationFunction;
-    public List<Double[]> activationsMatrix;
-    public List<Double[]> weightedSumsMatrix;
-    public List<Double[][]> weightsMatrix;
-    public List<Double> errorProgression;
+    private List<Double[]> activationsMatrix;
+    private List<Double[]> weightedSumsMatrix;
+    private List<Double[][]> weightsMatrix;
+    private List<Double> errorProgression;
 
     public NeuralNetwork(int[] structure) {
         // simple constructor, passing only structure
@@ -240,4 +240,17 @@ public class NeuralNetwork {
         return this.hiddenLayerActivationFunction.activationFunction(z,calculateDerivative);
     }
 
+    // getters for export
+
+    public List<Double[]> getActivationsMatrix() {
+        return activationsMatrix;
+    }
+
+    public List<Double[]> getWeightedSumsMatrix() {
+        return weightedSumsMatrix;
+    }
+
+    public List<Double[][]> getWeightsMatrix() {
+        return weightsMatrix;
+    }
 }

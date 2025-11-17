@@ -1,10 +1,15 @@
 package pl.jakubholik90.menus;
 
+import pl.jakubholik90.controllers.NeuralNetworkExportController;
+import pl.jakubholik90.database.DatabaseService;
+import pl.jakubholik90.dto.NeuralNetworkConfig;
+import pl.jakubholik90.dto.NeuralNetworkSnapshotRecord;
 import pl.jakubholik90.ui.App;
 import pl.jakubholik90.ui.UI;
 
 public class SaveLoadNNMenu extends MenuAbstract {
     private MainMenu mainMenu;
+    private TrainNNMenu trainNNMenu;
 
     public SaveLoadNNMenu(UI actualUI, App app) {
         super(actualUI, app);
@@ -12,6 +17,10 @@ public class SaveLoadNNMenu extends MenuAbstract {
 
     public void setMainMenu(MainMenu menu) {
         this.mainMenu = menu;
+    }
+
+    public void setTrainNNMenu(TrainNNMenu menu) {
+        this.trainNNMenu = menu;
     }
 
     @Override
@@ -47,8 +56,20 @@ public class SaveLoadNNMenu extends MenuAbstract {
 
     private void handleSaveNeuralNetwork() {
         // Implementation for saving the neural network
+        actualUI.displayMessage("Please enter NN name to save:");
+        String nnName = actualUI.getUserInput();
+        actualUI.displayMessage("Please enter comment (or leave empty):");
+        String comment = actualUI.getUserInput();
 
-        actualUI.displayMessage("Saving Neural Network... (Functionality not yet implemented)");
+        NeuralNetworkSnapshotRecord snapshot = NeuralNetworkExportController.createSnapshot(
+                app.getConfig(),
+                app.getNeuralNetwork(),
+                nnName,
+                trainNNMenu.getDataSet().getName(),
+                comment);
+
+        String fileName = NeuralNetworkExportController.exportNeuralNetwork(snapshot);
+        actualUI.displayMessage("Neural Network saved to file: " + fileName);
     }
 
     private void handleLoadNeuralNetwork() {
