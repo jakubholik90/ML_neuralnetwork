@@ -9,6 +9,7 @@ public class MainMenu extends MenuAbstract {
     private TrainNNMenu trainNNMenu;
     private ManageDBMenu manageDBMenu;
     private PredictionMenu predictionMenu;
+    private SaveLoadNNMenu saveLoadNNMenu;
 
 
     public MainMenu(UI actualUI, App app) {
@@ -48,6 +49,7 @@ public class MainMenu extends MenuAbstract {
                 break;
             case 5:
                 // Handle Save/Load Neural Network
+                saveLoadNNMenu.runMenu();
                 break;
             case 0:
                 // Handle Exit
@@ -76,6 +78,10 @@ public class MainMenu extends MenuAbstract {
 
     public void setPredictionMenu(PredictionMenu predictionMenu) {
         this.predictionMenu = predictionMenu;
+    }
+
+    public void setSaveLoadNNMenu(SaveLoadNNMenu saveLoadNNMenu) {
+        this.saveLoadNNMenu = saveLoadNNMenu;
     }
 
 }

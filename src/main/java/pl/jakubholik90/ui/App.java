@@ -15,6 +15,7 @@ public class App {
     private TrainNNMenu trainNNMenu;
     private ManageDBMenu manageDBMenu;
     private PredictionMenu predictionMenu;
+    private SaveLoadNNMenu saveLoadNNMenu;
     // ui
     private UI actualUI;
     // neural network and its config
@@ -43,6 +44,7 @@ public class App {
         this.trainNNMenu = new TrainNNMenu(actualUI,this);
         this.manageDBMenu = new ManageDBMenu(actualUI,this);
         this.predictionMenu = new PredictionMenu(actualUI,this);
+        this.saveLoadNNMenu = new SaveLoadNNMenu(actualUI,this);
 
 
         // inject dependencies between menus
@@ -51,22 +53,18 @@ public class App {
         this.mainMenu.setTrainNNMenu(this.trainNNMenu); // from MainMenu to TrainNNMenu
         this.mainMenu.setManageDBMenu(this.manageDBMenu); // from MainMenu to ManageDBMenu
         this.mainMenu.setPredictionMenu(this.predictionMenu); // from MainMenu to PredictionMenu
-
+        this.mainMenu.setSaveLoadNNMenu(this.saveLoadNNMenu); // from MainMenu to SaveLoadNNMenu
         // "new/modify" menu connections
         this.modifyNNMenu.setMainMenu(this.mainMenu); // from NewModifyMenu to MainMenu
-
         // "train" menu connections
         this.trainNNMenu.setMainMenu(this.mainMenu); // from NewModifyMenu to MainMenu
-
         // "manage db" menu connections
         this.manageDBMenu.setMainMenu(this.mainMenu); // from ManageDBMenu to MainMenu
-
         // "prediction" menu connections
         this.predictionMenu.setMainMenu(this.mainMenu); // from PredictionMenu to MainMenu
         this.predictionMenu.setTrainNNMenu(this.trainNNMenu); // from PredictionMenu to TrainNNMenu
-
-
-
+        // "save/load nn" menu connections
+        this.saveLoadNNMenu.setMainMenu(this.mainMenu); // from SaveLoadNNMenu
     }
 
     public void setConfig (NeuralNetworkConfig config) {
