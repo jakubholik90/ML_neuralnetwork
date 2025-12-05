@@ -23,9 +23,20 @@ public class NeuralNetworkExportController {
     }
 
     public static NeuralNetworkSnapshotRecord createSnapshot(NeuralNetworkConfig config, NeuralNetwork neuralNetwork, String nnName, String dataSetName, String userComment) {
+        int[] structure = config.getStructure();
+        int numberOfIterations = config.getNumberOfIterations();
+        double eta = config.getEta();
+        String outputLayerActivationFunction = config.getNameActivationFunction(config.getOutputLayerActivationFunction());
+        String hiddenLayerActivationFunction = config.getNameActivationFunction(config.getHiddenLayerActivationFunction());
+
+
         NeuralNetworkSnapshotRecord snapshot = new NeuralNetworkSnapshotRecord(
                 nnName,
-                config,
+                structure,
+                numberOfIterations,
+                eta,
+                outputLayerActivationFunction,
+                hiddenLayerActivationFunction,
                 neuralNetwork.getActivationsMatrix(),
                 neuralNetwork.getWeightedSumsMatrix(),
                 neuralNetwork.getWeightsMatrix(),
@@ -52,9 +63,9 @@ public class NeuralNetworkExportController {
 
     public static NeuralNetworkSnapshotRecord importNeuralNetwork(String fileName) {
         try (FileReader reader = new FileReader(filePath + fileName)) {
-            String jsonAsString = reader.toString();
+            // String jsonAsString = reader.toString();
             Gson gson = new Gson();
-            NeuralNetworkSnapshotRecord snapshot = gson.fromJson(jsonAsString, NeuralNetworkSnapshotRecord.class);
+            NeuralNetworkSnapshotRecord snapshot = gson.fromJson(reader, NeuralNetworkSnapshotRecord.class);
             return snapshot;
         } catch (IOException e) {
             e.printStackTrace();

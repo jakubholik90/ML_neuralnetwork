@@ -29,6 +29,10 @@ public class NeuralNetworkConfig {
         this.hiddenLayerActivationFunction = other.hiddenLayerActivationFunction;
     }
 
+    public void setStructure(int[] structure) {
+        this.structure = structure;
+    }
+
     public void setNumberOfInputs(int numberOfInputs) {
         this.structure[0] = numberOfInputs;
     }

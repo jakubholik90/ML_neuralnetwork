@@ -253,4 +253,21 @@ public class NeuralNetwork {
     public List<Double[][]> getWeightsMatrix() {
         return weightsMatrix;
     }
+
+    // setters for import
+
+
+    public void setActivationsMatrix(List<Double[]> activationsMatrix) {
+        this.activationsMatrix = activationsMatrix;
+    }
+
+    public void setWeightedSumsMatrix(List<Double[]> weightedSumsMatrix) {
+        this.weightedSumsMatrix = weightedSumsMatrix;
+    }
+
+    public void setWeightsMatrix(List<Double[][]> weightsMatrix) {
+        this.weightsMatrix = weightsMatrix;
+    }
 }
+
+

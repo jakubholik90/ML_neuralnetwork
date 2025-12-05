@@ -97,8 +97,7 @@ public class TrainNNMenu extends MenuAbstract {
         if (dbSetByName != null) {
             this.dataSet = dbSetByName;
             actualUI.displayMessage("Data set '" + dbSetName + "' selected for training. Verify the data before training.");
-            this.dataVerified = false;
-            this.networkIsTrained = false;
+            this.setAsUntrained();
         }
 
         this.runMenu();
@@ -216,5 +215,18 @@ public class TrainNNMenu extends MenuAbstract {
 
     public DataSet getDataSet() {
         return dataSet;
+    }
+
+    public void setAsTrainedWithDataset(String dataSetName) throws SQLException {
+        try {
+            this.dataSet = dbService.getDataSetByName(dataSetName);
+            this.networkIsTrained = true;
+            this.dataVerified = true;
+            actualUI.displayMessage("Dataset '" + dataSetName + "' found and loaded sucessfully");
+        } catch (Exception e) {
+            actualUI.displayMessage("Note: Original training dataset '" + dataSetName + "' not found in database.");
+            this.dataSet = null;
+            this.setAsUntrained();
+        }
     }
 }

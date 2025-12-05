@@ -1,6 +1,8 @@
 package pl.jakubholik90.controllers;
 
 import com.google.gson.Gson;
+import pl.jakubholik90.dto.ActivationFunctionsEnum;
+import pl.jakubholik90.dto.NeuralNetworkSnapshotRecord;
 import pl.jakubholik90.neuralnetwork.NeuralNetwork;
 import pl.jakubholik90.dto.NeuralNetworkConfig;
 
@@ -18,6 +20,28 @@ public class NeuralNetworkController {
                 config.getHiddenLayerActivationFunction());
 
         return neuralNetwork;
+    }
+
+    public NeuralNetwork restoreNeuralNetworkFromSnapshot(NeuralNetworkSnapshotRecord importSnapshot) {
+        NeuralNetworkConfig config = new NeuralNetworkConfig();
+        config.setStructure(importSnapshot.structure());
+        config.setNumberOfIterations(importSnapshot.numberOfIterations());
+        config.setEta(importSnapshot.eta());
+        config.setOutputLayerActivationFunction(importSnapshot.outputLayerActivationFunction());
+        config.setHiddenLayerActivationFunction(importSnapshot.hiddenLayerActivationFunction());
+
+        NeuralNetwork restoredNeuralNetwork = createNeuralNetworkFromConfig(config);
+
+        restoredNeuralNetwork.step0Build();
+
+        restoredNeuralNetwork.setWeightsMatrix(importSnapshot.weightsMatrix());
+        restoredNeuralNetwork.setWeightedSumsMatrix(importSnapshot.weightedSumsMatrix());
+        restoredNeuralNetwork.setActivationsMatrix(importSnapshot.activationsMatrix());
+
+        return restoredNeuralNetwork;
+
+
+
     }
 
 }

@@ -4,7 +4,11 @@ import java.util.List;
 
 public record NeuralNetworkSnapshotRecord(
         String name,
-        NeuralNetworkConfig config,
+        int[] structure,
+        int numberOfIterations,
+        double eta,
+        String outputLayerActivationFunction,
+        String hiddenLayerActivationFunction,
         List<Double[]> activationsMatrix,
         List<Double[]> weightedSumsMatrix,
         List<Double[][]> weightsMatrix,

@@ -83,9 +83,19 @@ public class App {
         return this.currentNeuralNetwork;
     }
 
+    public void  setNeuralNetwork(NeuralNetwork neuralNetwork) {
+        this.currentNeuralNetwork = neuralNetwork;
+    }
+
+    public NeuralNetworkController getController() {
+        return controller;
+    }
+
     public void buildNeuralNetwork() {
         this.currentNeuralNetwork = controller.createNeuralNetworkFromConfig(this.currentConfig);
         this.currentNeuralNetwork.step0Build();
         actualUI.displayMessage("Neural Network successfully built.");
     }
+
+
 }
