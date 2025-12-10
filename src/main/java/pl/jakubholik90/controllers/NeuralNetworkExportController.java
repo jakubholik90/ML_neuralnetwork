@@ -1,7 +1,7 @@
 package pl.jakubholik90.controllers;
 
 import com.google.gson.Gson;
-import pl.jakubholik90.dto.NeuralNetworkConfig;
+import pl.jakubholik90.neuralnetwork.NeuralNetworkConfig;
 import pl.jakubholik90.dto.NeuralNetworkSnapshotRecord;
 import pl.jakubholik90.neuralnetwork.NeuralNetwork;
 

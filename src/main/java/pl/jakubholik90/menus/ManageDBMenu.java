@@ -1,14 +1,21 @@
 package pl.jakubholik90.menus;
 
+import pl.jakubholik90.controllers.CSVController;
+import pl.jakubholik90.controllers.NeuralNetworkExportController;
 import pl.jakubholik90.database.DataRecord;
 import pl.jakubholik90.database.DataSet;
 import pl.jakubholik90.database.DatabaseService;
+import pl.jakubholik90.dto.NeuralNetworkSnapshotRecord;
+import pl.jakubholik90.neuralnetwork.NeuralNetwork;
+import pl.jakubholik90.neuralnetwork.NeuralNetworkConfig;
 import pl.jakubholik90.ui.App;
 import pl.jakubholik90.ui.UI;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class ManageDBMenu extends MenuAbstract {
 
@@ -26,12 +33,13 @@ public class ManageDBMenu extends MenuAbstract {
 
     @Override
     public MenuTable create() {
-        MenuTable menuTable = new MenuTable("Manage Training Data Menu","Browsing training data one by one or by sets.");
-        menuTable.addMenuItem(new MenuItem(1,"View all data records", "Display all training data records in the database one by one"));
-        menuTable.addMenuItem(new MenuItem(2,"View all data sets", "Display all data sets in the database"));
-        menuTable.addMenuItem(new MenuItem(3,"Manage data record", "Insert, update or delete training data records one by one"));
-        menuTable.addMenuItem(new MenuItem(4,"Manage data sets", "Rename, copy or delete data sets"));
-        menuTable.addMenuItem(new MenuItem(0,"Back", "Return to the main menu"));
+        MenuTable menuTable = new MenuTable("Manage Training Data Menu", "Browsing training data one by one or by sets.");
+        menuTable.addMenuItem(new MenuItem(1, "View all data records", "Display all training data records in the database one by one"));
+        menuTable.addMenuItem(new MenuItem(2, "View all data sets", "Display all data sets in the database"));
+        menuTable.addMenuItem(new MenuItem(3, "Manage data record", "Insert, update or delete training data records one by one"));
+        menuTable.addMenuItem(new MenuItem(4, "Manage data sets", "Rename, copy or delete data sets"));
+        menuTable.addMenuItem(new MenuItem(5, "Import data set from csv", "Import data set from external csv file"));
+        menuTable.addMenuItem(new MenuItem(0, "Back", "Return to the main menu"));
         return menuTable;
     }
 
@@ -53,6 +61,10 @@ public class ManageDBMenu extends MenuAbstract {
             case 4:
                 // Handle Manage data sets
                 handleManageDataSets();
+                break;
+            case 5:
+                //Hanlde Import from CSV
+                handleImportFromCsv();
                 break;
             case 0:
                 // Handle Back
@@ -80,10 +92,10 @@ public class ManageDBMenu extends MenuAbstract {
 
     private void handleManageDataRecord() throws SQLException {
         MenuTable menuTable = new MenuTable("Manage Data Record Menu", "Insert, update or delete training data records one by one.");
-        menuTable.addMenuItem(new MenuItem(1,"Insert data record", "Add a new training data record to the database"));
-        menuTable.addMenuItem(new MenuItem(2,"Update data record", "Modify an existing training data record from the database"));
-        menuTable.addMenuItem(new MenuItem(3,"Delete data record", "Remove a training data record from the database"));
-        menuTable.addMenuItem(new MenuItem(0,"Back", "Return to the Manage Database Menu"));
+        menuTable.addMenuItem(new MenuItem(1, "Insert data record", "Add a new training data record to the database"));
+        menuTable.addMenuItem(new MenuItem(2, "Update data record", "Modify an existing training data record from the database"));
+        menuTable.addMenuItem(new MenuItem(3, "Delete data record", "Remove a training data record from the database"));
+        menuTable.addMenuItem(new MenuItem(0, "Back", "Return to the Manage Database Menu"));
 
         int userChoice = actualUI.displayMenuAskChoice(menuTable);
 
@@ -121,7 +133,7 @@ public class ManageDBMenu extends MenuAbstract {
                 String updatedInputValues = inputValues2.equalsIgnoreCase("X") ? Arrays.toString(dbRecord.inputData()) : inputValues2;
                 String updatedOutputValues = outputValues2.equalsIgnoreCase("X") ? Arrays.toString(dbRecord.outputData()) : outputValues2;
                 DataRecord updatedDataRecord = new DataRecord(updatedDataSetName, dbService.parseStringToDoubleArray(updatedInputValues), dbService.parseStringToDoubleArray(updatedOutputValues));
-                dbService.updateDataRecord(selectedId,updatedDataRecord);
+                dbService.updateDataRecord(selectedId, updatedDataRecord);
                 actualUI.displayMessage("Updated data record:");
                 dbService.previewSingleDataRecord(dbService.getDataRecordById(selectedId));
                 break;
@@ -194,5 +206,65 @@ public class ManageDBMenu extends MenuAbstract {
                 break;
         }
         this.runMenu();
+    }
+
+    private void handleImportFromCsv() throws SQLException {
+        List<String> fileList = CSVController.listAllFiles();
+        MenuTable loadCsvMenu = new MenuTable("Load CSV File Menu", "Select CSV file to be loaded");
+        for (int i = 1; i < fileList.size() + 1; i++) {
+            loadCsvMenu.addMenuItem(new MenuItem(i, fileList.get(i - 1), ""));
+        }
+        loadCsvMenu.addMenuItem(new MenuItem(0, "Back", "Return to the previous menu"));
+        int choice = this.actualUI.displayMenuAskChoice(loadCsvMenu);
+
+        boolean validChoice = false;
+
+        if (choice == 0) {
+            this.runMenu();
+        } else {
+            if (choice > 0 && choice <= fileList.size()) {
+                validChoice = true;
+            } else {
+                validChoice = false;
+                this.actualUI.displayMessage("Invalid choice, returning to previous menu");
+                this.runMenu();
+            }
+        }
+
+        if (validChoice) {
+            String lineToRead = fileList.get(choice - 1);
+            this.actualUI.displayMessage("Loading: " + lineToRead);
+            List<Double[]> actualCsvAsList = CSVController.importCsvData(lineToRead);
+            int actualCsvSize = actualCsvAsList.getFirst().length;
+            this.actualUI.displayMessage("First Data Row: " + Arrays.toString(actualCsvAsList.getFirst()));
+            this.actualUI.displayMessage("Insert set name:");
+            String newSetName = this.actualUI.getUserInput();
+            this.actualUI.displayMessage("Splitting between inputs and outputs. Insert number of inputs (<=" + actualCsvSize + ")");
+            Integer userInput = Integer.valueOf(this.actualUI.getUserInput());
+
+            if (!(userInput > actualCsvSize) && userInput > 0) {
+                this.actualUI.displayMessage("Splitting " + actualCsvSize + " values into " + userInput + " inputs and " + (actualCsvSize - userInput) + " outputs");
+                for (Double[] actualCsvRecord : actualCsvAsList) {
+                    Double[] inputs = new Double[userInput];
+                    Double[] outputs = new Double[actualCsvSize - userInput];
+                    for (int i = 0; i < actualCsvSize; i++) {
+                        if (i < userInput) {
+                            inputs[i] = actualCsvRecord[i];
+                        } else {
+                            outputs[i - userInput] = actualCsvRecord[i];
+                        }
+                    }
+                    DataRecord dataRecordToInsert = new DataRecord(newSetName, inputs, outputs);
+                    dbService.insertDataRecord(dataRecordToInsert);
+                    this.actualUI.displayMessage("Added following record to Database: ");
+                    dbService.previewSingleDataRecord(dataRecordToInsert);
+                }
+            } else {
+                this.actualUI.displayMessage("Invalid choice, returning to previous menu");
+                this.runMenu();
+            }
+
+            this.runMenu();
+        }
     }
 }

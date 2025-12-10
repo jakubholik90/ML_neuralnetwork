@@ -1,9 +1,7 @@
 package pl.jakubholik90.menus;
 
-import pl.jakubholik90.controllers.NeuralNetworkController;
 import pl.jakubholik90.controllers.NeuralNetworkExportController;
-import pl.jakubholik90.database.DatabaseService;
-import pl.jakubholik90.dto.NeuralNetworkConfig;
+import pl.jakubholik90.neuralnetwork.NeuralNetworkConfig;
 import pl.jakubholik90.dto.NeuralNetworkSnapshotRecord;
 import pl.jakubholik90.neuralnetwork.NeuralNetwork;
 import pl.jakubholik90.ui.App;
@@ -11,7 +9,6 @@ import pl.jakubholik90.ui.UI;
 
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 public class SaveLoadNNMenu extends MenuAbstract {
@@ -114,7 +111,6 @@ public class SaveLoadNNMenu extends MenuAbstract {
             this.actualUI.displayMessage("Structure: " + Arrays.toString(importSnapshot.structure()));
             this.actualUI.displayMessage("Training Data Set: " + importSnapshot.trainingDataSetName());
 
-            // to be finished here, use followin method
             NeuralNetwork loadedNeuralNetwork = this.app.getController().restoreNeuralNetworkFromSnapshot(importSnapshot);
             NeuralNetworkConfig loadedConfig = new NeuralNetworkConfig();
             loadedConfig.setStructure(importSnapshot.structure());
